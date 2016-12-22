@@ -1,0 +1,151 @@
+﻿@model FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke.SmokeData
+
+@{
+    ViewBag.Title = "Smoke Unit Converter";
+    Layout = "_Layout";
+}
+
+<h2>Result of the smoke conversion</h2>
+
+<br />
+
+<table class="table table-striped">
+    <tr>
+        <th style="width: 40%">Name</th>
+        <th style="width: 10%; text-align: center">Term</th>
+        <th style="width: 20%"></th>
+        <th style="width: 15%; text-align: center">Value</th>
+        <th style="width: 15%; text-align: center">Unit</th>
+    </tr>
+
+    @if (Model.RateOfHeatRelease > 0)
+    {
+        <tr>
+            <td name="alignLeft">@Html.Label("Rate of Heat Release")</td>
+            <td>RHR</td>
+            <td></td>
+            <td>@Model.RateOfHeatRelease</td>
+            <td>[kW]</td>
+        </tr>
+    }
+
+    @if (Model.Pod > 0)
+    {
+        <tr>
+
+            <td name="alignLeft">@Html.Label("Extinction Coefficient")</td>
+            <td>POD</td>
+            <td></td>
+            <td>@Model.Pod</td>
+            <td>[m²/kg]</td>
+        </tr>
+    }
+
+    @if (Model.Hair > 0)
+    {
+        <tr>
+
+            <td name="alignLeft">@Html.Label("Specific Enthalpy for Ambient Air")</td>
+            <td>H<sub>air</sub></td>
+            <td></td>
+            <td>@Model.Hair</td>
+            <td>[kJ/kg]</td>
+        </tr>
+    }
+
+    @if (Model.Hmat > 0)
+    {
+        <tr>
+
+            <td name="alignLeft">@Html.Label("Heat of Combustion for Fuel")</td>
+            <td>H<sub>mat</sub></td>
+            <td></td>
+            <td>@Model.Hmat</td>
+            <td>[kJ/kg]</td>
+        </tr>
+    }
+
+    @if (Model.Rho0 > 0)
+    {
+        <tr>
+
+            <td name="alignLeft">@Html.Label("Density of Ambient Air")</td>
+            <td>&rho;<sub>0</sub></td>
+            <td></td>
+            <td>@Model.Rho0</td>
+            <td>[kg/m³]</td>
+        </tr>
+    }
+
+    <tr style="height: 40px">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    @if (Model.S > 0)
+    {
+        <tr>
+
+            <td name="alignLeft">@Html.Label("Smoke Production")</td>
+            <td>S</td>
+            <td></td>
+            <td>@Model.S</td>
+            <td>[ob m³/s]</td>
+        </tr>
+    }
+
+    @if (Model.S0 > 0)
+    {
+        <tr>
+            <td name="alignLeft">@Html.Label("Smoke Potential, used in Argos")</td>
+            <td>S<sub>0</sub></td>
+            <td></td>
+            <td>@Model.S0</td>
+            <td>[ob]</td>
+        </tr>
+    }
+
+    @if (Model.D010Log > 0)
+    {
+        <tr>
+            <td name="alignLeft">@Html.Label("Smoke Potential, linked to amount of Burned Fuel")</td>
+            <td>D<sub>0,10LOG</sub></td>
+            <td></td>
+            <td>@Model.D010Log</td>
+            <td>[ob m³/g]</td>
+        </tr>
+    }
+
+    @if (Model.Ys > 0)
+    {
+        <tr>
+            <td name="alignLeft"> @Html.Label("Soot yield") </td>
+            <td>y<sub>s</sub></td>
+            <td></td>
+            <td>@Model.Ys</td>
+            <td>[-]</td>
+        </tr>
+    }
+
+</table>
+
+<style>
+    table {
+        font-size: 18px;
+    }
+
+    td {
+        text-align: center;
+    }
+
+        td[name="alignLeft"] {
+            text-align: left;
+        }
+
+    label {
+        font-weight: normal;
+    }
+</style>

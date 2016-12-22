@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using FireSafetyTools.Data;
 using FireSafetyTools.Models;
 using FireSafetyTools.Services;
+using FireSafetyTools.Services.Tools.FireSafety.OpticalSmoke;
 
 namespace FireSafetyTools
 {
@@ -52,6 +49,8 @@ namespace FireSafetyTools
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            services.AddSingleton<IUnitConverterContext, UnitConverterContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

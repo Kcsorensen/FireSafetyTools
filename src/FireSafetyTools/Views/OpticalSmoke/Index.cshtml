@@ -1,0 +1,278 @@
+﻿@using System.Threading.Tasks
+@using FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
+@model FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke.SmokeData
+
+@{
+    ViewBag.Title = "Smoke Unit Converter";
+    Layout = "_Layout";
+}
+
+@using (Html.BeginForm("Calculate", "OpticalSmoke"))
+{
+    <h2 style="margin-bottom: 30px">Smoke Unit Converter</h2>
+
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+    
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Calculate from")
+                @Html.DropDownListFor(s => s.ConvertFromId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
+            </div>
+        </li>
+
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Calculate to")
+                @Html.DropDownListFor(s => s.ConvertToId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
+
+            </div>
+        </li>
+    </ul>
+
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+    
+        <li id="RHR" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Rate of Heat Release [kW]")
+                @Html.TextBoxFor(s => s.RateOfHeatRelease, new {@class = "form-control"})
+                @Html.ValidationMessageFor(s => s.RateOfHeatRelease)
+            </div>
+        </li>
+
+        <li id="POD" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Heat of Combustion of Fuel [kJ/kg]")
+                @Html.TextBoxFor(s => s.Hmat, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(s => s.Hmat)
+            </div>
+        </li>
+
+        <li id="Hmat" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Heat of Combustion of Fuel [kJ/kg]")
+                @Html.TextBoxFor(s => s.Hmat, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(s => s.Hmat)
+            </div>
+        </li>
+        
+        <li id="Hair" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Specific Enthalpy for Dry Air [kJ/kg]")
+                @Html.TextBoxFor(s => s.Hair, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s.Hair)
+            </div>
+        </li>
+        
+        <li id="Rho" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Density of Ambient Air [kg/m³]")
+                @Html.TextBoxFor(s => s.Rho0, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s.Rho0)
+            </div>
+        </li>
+        
+        <li id="Ys" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Soot Yield [-]")
+                @Html.TextBoxFor(s => s.Ys, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s.Ys)
+            </div>
+        </li>
+        
+        <li id="S0" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Smoke Potential used in Argos [ob]")
+                @Html.TextBoxFor(s => s.S0, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s.S0)
+            </div>
+        </li>
+        
+        <li id="S" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Smoke Production [ob m²/s]")
+                @Html.TextBoxFor(s => s.S, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s.S)
+            </div>
+        </li>
+        
+        <li id="D0" class="textboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.Label("Smoke Potential linked to Fuel [ob m²/g]")
+                @Html.TextBoxFor(s => s.D010Log, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s.D010Log)
+            </div>
+        </li>
+
+    </ul>
+
+    <div id="clearline"></div>
+    
+    <div>
+        <button type="submit" class="btn btn-primary">Calculate</button>
+        @Html.ActionLink("Clear", "ClearSmokeData", "OpticalSmoke", null, new { @class = "btn btn-warning" })
+    </div>
+}
+
+<style>
+    
+    ul.listoftextboxes  {
+        margin-bottom: 30px;
+        padding: 0px;
+    }
+
+    li.textboxblock, li.dropboxblock {
+        display: inline-block;
+        width: 280px;
+        text-align: left;
+        padding-left: 0px;
+        margin-right: 30px;
+        
+    }
+
+    li.textboxblock {
+        height: 80px;
+    }
+
+    #clearline {
+        clear:both;
+    }
+
+</style>
+
+@section scripts
+{
+    <script>
+
+        $(document).ready(function() {
+
+            var convertFrom = document.getElementById("ConvertFromId");
+            var convertTo = document.getElementById("ConvertToId");
+
+            var select = $("select");
+
+            var rhr = document.getElementById("RHR");
+            var pod = document.getElementById("POD");
+            var hmat = document.getElementById("Hmat");
+            var hair = document.getElementById("Hair");
+            var rho = document.getElementById("Rho");
+            var ys = document.getElementById("Ys");
+            var s0 = document.getElementById("S0");
+            var s = document.getElementById("S");
+            var d0 = document.getElementById("D0");
+
+            var textElements = document.getElementsByClassName("textboxblock");
+
+            function refreshPage() {
+
+                for (var i = 0; i < textElements.length; i++) {
+                    textElements[i].style.display = "none";
+                };
+
+                // Calculate_to = SmokePotentialArgos
+                if (convertTo.value === "@SmokeUnit.SmokePotentialArgos") {
+
+                    if (convertFrom.value === "@SmokeUnit.SmokePotentialFuel") {
+                        d0.style.display = "inline-block";
+                        hair.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                        rho.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SmokeProduction") {
+                        s.style.display = "inline-block";
+                        rhr.style.display = "inline-block";
+                        hair.style.display = "inline-block";
+                        rho.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SootYield") {
+                        ys.style.display = "inline-block";
+                        hair.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                        rho.style.display = "inline-block";
+                        pod.style.display = "inline-block";
+                    }
+                };
+
+                // Calculate_to = SmokePotentialFuel
+                if (convertTo.value === "@SmokeUnit.SmokePotentialFuel") {
+
+                    if (convertFrom.value === "@SmokeUnit.SmokePotentialArgos") {
+                        s0.style.display = "inline-block";
+                        hair.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                        rho.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SmokeProduction") {
+                        s.style.display = "inline-block";
+                        rhr.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SootYield") {
+                        ys.style.display = "inline-block";
+                        pod.style.display = "inline-block";
+                    }
+                };
+
+                // Calculate_to = SmokeProduction
+                if (convertTo.value === "@SmokeUnit.SmokeProduction") {
+
+                    if (convertFrom.value === "@SmokeUnit.SmokePotentialArgos") {
+                        s0.style.display = "inline-block";
+                        rhr.style.display = "inline-block";
+                        hair.style.display = "inline-block";
+                        rho.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SmokePotentialFuel") {
+                        d0.style.display = "inline-block";
+                        rhr.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SootYield") {
+                        ys.style.display = "inline-block";
+                        rhr.style.display = "inline-block";
+                        pod.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                    }
+                };
+
+                // Calculate_to = SootYield
+                if (convertTo.value === "@SmokeUnit.SootYield") {
+
+                    if (convertFrom.value === "@SmokeUnit.SmokePotentialArgos") {
+                        s0.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                        pod.style.display = "inline-block";
+                        hair.style.display = "inline-block";
+                        rho.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SmokePotentialFuel") {
+                        d0.style.display = "inline-block";
+                        pod.style.display = "inline-block";
+                    }
+
+                    if (convertFrom.value === "@SmokeUnit.SmokeProduction") {
+                        s.style.display = "inline-block";
+                        rhr.style.display = "inline-block";
+                        pod.style.display = "inline-block";
+                        hmat.style.display = "inline-block";
+                    }
+                }
+            }
+
+            refreshPage();
+
+            select.change(function() {
+
+                refreshPage();
+
+            });
+        });
+
+    </script>
+}
