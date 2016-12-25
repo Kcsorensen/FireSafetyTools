@@ -1,29 +1,36 @@
-using System;
 using FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke;
-using FireSafetyTools.Services.Tools.FireSafety.OpticalSmoke;
+using FireSafetyTools.Services;
+using FireSafetyTools.ViewModel.Tools.FireSafety.OpticalSmoke;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireSafetyTools.Controllers
 {
     public class OpticalSmokeController : Controller
     {
-        private IUnitConverterContext _context;
-
-        public OpticalSmokeController(IUnitConverterContext unitConverterConvext)
-        {
-            _context = unitConverterConvext;
-        }
-
         public IActionResult Index()
         {
-            var smokedata = _context.GetsSmokeData();
+            if (HttpContext.Session.GetObjectFromJson<SmokeData>(SessionNames.SmokeData) == null)
+            {
+                HttpContext.Session.SetObjectAsJson(SessionNames.SmokeData, new SmokeData());
+            }
+
+            //var viewModel = HttpContext.Session.GetObjectFromJson<SmokeDataViewModel>(SessionNames.SmokeData);
+
+            var smokedata = HttpContext.Session.GetObjectFromJson<SmokeData>(SessionNames.SmokeData);
 
             return View(smokedata);
         }
 
         public ActionResult SmokeResult()
         {
-            var smokedata = _context.GetsSmokeData();
+            if (HttpContext.Session.GetObjectFromJson<SmokeData>(SessionNames.SmokeData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            //var viewModel = HttpContext.Session.GetObjectFromJson<SmokeDataViewModel>(SessionNames.SmokeData);
+
+            var smokedata = HttpContext.Session.GetObjectFromJson<SmokeData>(SessionNames.SmokeData);
 
             return View("SmokeResult", smokedata);
         }
@@ -46,14 +53,24 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
-            _context.UpdateSmokeData(result);
+            //var viewModel = HttpContext.Session.GetObjectFromJson<SmokeDataViewModel>(SessionNames.SmokeData);
+
+            //viewModel.UpdateSmokeData(result);
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.SmokeData, result);
 
             return RedirectToAction("SmokeResult");
         }
 
         public IActionResult ClearSmokeData()
         {
-            _context.ClearSmokeData();
+            //var viewModel = HttpContext.Session.GetObjectFromJson<SmokeDataViewModel>(SessionNames.SmokeData);
+
+            //viewModel.ClearSmokeData();
+
+            var smokeData = new SmokeData();
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.SmokeData, smokeData);
 
             return RedirectToAction("Index");
         }

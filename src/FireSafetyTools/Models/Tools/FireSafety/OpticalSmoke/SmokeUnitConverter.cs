@@ -7,13 +7,6 @@ namespace FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
 {
     public class SmokeUnitConverter
     {
-        private SmokeData _smokeUnits;
-
-        public SmokeUnitConverter()
-        {
-            _smokeUnits = new SmokeData();
-        }
-
         public SmokeData Calculate(string fromUnitIndex, string toUnitIndex, SmokeData data)
         {
             if (data == null)

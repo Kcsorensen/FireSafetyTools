@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * jQuery Validation Plugin v1.14.0
  *
  * http://jqueryvalidation.org/
@@ -593,7 +593,7 @@ $.validator.addMethod( "nieES", function( value ) {
 		return false;
 	}
 
-	// Test NIE
+	// SmokeData NIE
 	//T
 	if ( /^[T]{1}/.test( value ) ) {
 		return ( value[ 8 ] === /^[T]{1}[A-Z0-9]{8}$/.test( value ) );
@@ -628,11 +628,11 @@ $.validator.addMethod( "nifES", function( value ) {
 		return false;
 	}
 
-	// Test NIF
+	// SmokeData NIF
 	if ( /^[0-9]{8}[A-Z]{1}$/.test( value ) ) {
 		return ( "TRWAGMYFPDXBNJZSQVHLCKE".charAt( value.substring( 8, 0 ) % 23 ) === value.charAt( 8 ) );
 	}
-	// Test specials NIF (starts with K, L or M)
+	// SmokeData specials NIF (starts with K, L or M)
 	if ( /^[KLM]{1}/.test( value ) ) {
 		return ( value[ 8 ] === String.fromCharCode( 64 ) );
 	}

@@ -14,7 +14,12 @@ namespace FireSafetyTools.Services
         {
             var value = session.GetString(key);
 
-            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            if (value == null)
+            {
+                return default(T);
+            }
+
+            return JsonConvert.DeserializeObject<T>(value);
         }
     }
 }
