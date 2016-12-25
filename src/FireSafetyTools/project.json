@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-FireSafetyTools-15aa1ebf-39c6-44e0-bf72-a86e7a07bf4f",
 
   "dependencies": {
@@ -43,7 +43,9 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "Microsoft.AspNetCore.Session": "1.1.0",
+    "Microsoft.Extensions.Caching.Memory": "1.1.0"
   },
 
   "tools": {
