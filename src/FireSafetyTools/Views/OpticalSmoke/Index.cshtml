@@ -145,8 +145,8 @@
 
         $(document).ready(function() {
 
-            var convertFrom = document.getElementById("ConvertFromId");
-            var convertTo = document.getElementById("ConvertToId");
+            var convertFrom = document.getElementById("zsmokeData_ConvertFromId");
+            var convertTo = document.getElementById("zsmokeData_ConvertToId");
 
             var select = $("select");
 
@@ -162,7 +162,7 @@
 
             var textElements = document.getElementsByClassName("textboxblock");
 
-            @*function refreshPage() {
+            function refreshPage() {
 
                 for (var i = 0; i < textElements.length; i++) {
                     textElements[i].style.display = "none";
@@ -271,7 +271,7 @@
 
                 refreshPage();
 
-            });*@
+            });
         });
 
     </script>
