@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
+namespace JsonSerializerTest
 {
     public class SmokeData
     {

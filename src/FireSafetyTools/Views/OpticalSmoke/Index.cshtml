@@ -1,6 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
-@model FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke.SmokeData
+@model FireSafetyTools.ViewModel.Tools.FireSafety.OpticalSmoke.SmokeDataViewModel
 
 @{
     ViewBag.Title = "Smoke Unit Converter";
@@ -16,14 +16,14 @@
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Calculate from")
-                @Html.DropDownListFor(s => s.ConvertFromId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
+                @Html.DropDownListFor(s => s._smokeData.ConvertFromId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
             </div>
         </li>
 
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Calculate to")
-                @Html.DropDownListFor(s => s.ConvertToId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
+                @Html.DropDownListFor(s => s._smokeData.ConvertToId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
 
             </div>
         </li>
@@ -34,72 +34,72 @@
         <li id="RHR" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Rate of Heat Release [kW]")
-                @Html.TextBoxFor(s => s.RateOfHeatRelease, new {@class = "form-control"})
-                @Html.ValidationMessageFor(s => s.RateOfHeatRelease)
+                @Html.TextBoxFor(s => s._smokeData.RateOfHeatRelease, new {@class = "form-control"})
+                @Html.ValidationMessageFor(s => s._smokeData.RateOfHeatRelease)
             </div>
         </li>
 
         <li id="POD" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
-                @Html.Label("Heat of Combustion of Fuel [kJ/kg]")
-                @Html.TextBoxFor(s => s.Hmat, null, new {@class = "form-control"})
-                @Html.ValidationMessageFor(s => s.Hmat)
+                @Html.Label("Extinction Coefficient [kJ/kg]")
+                @Html.TextBoxFor(s => s._smokeData.Pod, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(s => s._smokeData.Hmat)
             </div>
         </li>
 
         <li id="Hmat" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Heat of Combustion of Fuel [kJ/kg]")
-                @Html.TextBoxFor(s => s.Hmat, null, new {@class = "form-control"})
-                @Html.ValidationMessageFor(s => s.Hmat)
+                @Html.TextBoxFor(s => s._smokeData.Hmat, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(s => s._smokeData.Hmat)
             </div>
         </li>
         
         <li id="Hair" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Specific Enthalpy for Dry Air [kJ/kg]")
-                @Html.TextBoxFor(s => s.Hair, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(s => s.Hair)
+                @Html.TextBoxFor(s => s._smokeData.Hair, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s._smokeData.Hair)
             </div>
         </li>
         
         <li id="Rho" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Density of Ambient Air [kg/m³]")
-                @Html.TextBoxFor(s => s.Rho0, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(s => s.Rho0)
+                @Html.TextBoxFor(s => s._smokeData.Rho0, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s._smokeData.Rho0)
             </div>
         </li>
         
         <li id="Ys" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Soot Yield [-]")
-                @Html.TextBoxFor(s => s.Ys, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(s => s.Ys)
+                @Html.TextBoxFor(s => s._smokeData.Ys, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s._smokeData.Ys)
             </div>
         </li>
         
         <li id="S0" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Smoke Potential used in Argos [ob]")
-                @Html.TextBoxFor(s => s.S0, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(s => s.S0)
+                @Html.TextBoxFor(s => s._smokeData.S0, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s._smokeData.S0)
             </div>
         </li>
         
         <li id="S" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Smoke Production [ob m²/s]")
-                @Html.TextBoxFor(s => s.S, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(s => s.S)
+                @Html.TextBoxFor(s => s._smokeData.S, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s._smokeData.S)
             </div>
         </li>
         
         <li id="D0" class="textboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.Label("Smoke Potential linked to Fuel [ob m²/g]")
-                @Html.TextBoxFor(s => s.D010Log, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(s => s.D010Log)
+                @Html.TextBoxFor(s => s._smokeData.D010Log, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(s => s._smokeData.D010Log)
             </div>
         </li>
 
@@ -162,7 +162,7 @@
 
             var textElements = document.getElementsByClassName("textboxblock");
 
-            function refreshPage() {
+            @*function refreshPage() {
 
                 for (var i = 0; i < textElements.length; i++) {
                     textElements[i].style.display = "none";
@@ -271,7 +271,7 @@
 
                 refreshPage();
 
-            });
+            });*@
         });
 
     </script>

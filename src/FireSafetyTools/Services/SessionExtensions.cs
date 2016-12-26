@@ -7,7 +7,9 @@ namespace FireSafetyTools.Services
     {
         public static void SetObjectAsJson(this ISession session, string key, object value)
         {
-            session.SetString(key, JsonConvert.SerializeObject(value));
+            var serialize = JsonConvert.SerializeObject(value);
+
+            session.SetString(key, serialize);
         }
 
         public static T GetObjectFromJson<T>(this ISession session, string key)
@@ -19,7 +21,9 @@ namespace FireSafetyTools.Services
                 return default(T);
             }
 
-            return JsonConvert.DeserializeObject<T>(value);
+            var deserialize = JsonConvert.DeserializeObject<T>(value);
+
+            return deserialize;
         }
     }
 }
