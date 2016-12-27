@@ -1,0 +1,71 @@
+﻿@using System.Threading.Tasks
+@using FireSafetyTools.Models.Tools.FireSafety.DesignFire
+@model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.PhaseViewModel
+
+@{
+    ViewBag.Title = "PhaseForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate ||
+                    Model.Phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect ||
+                    Model.Phase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
+{
+    <h2>Create a new Growth Phase</h2>
+}
+
+@if (Model.Phase.PhaseTypeId == PhaseType.SteadyKnownDuration)
+{
+    <h2>Create a new Steady Phase</h2>
+}
+
+
+@if (Model.Phase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate ||
+                    Model.Phase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect ||
+                    Model.Phase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+{
+    <h2>Create a new Decay Phase</h2>
+}
+
+@using (Html.BeginForm("Save", "DesignFire"))
+{
+    <div class="form-group" style="margin-top: 30px">
+        @if (Model.Phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate ||
+                     Model.Phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect ||
+                     Model.Phase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate ||
+                     Model.Phase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect ||
+                     Model.Phase.PhaseTypeId == PhaseType.SteadyKnownDuration)
+        {
+            @Html.LabelFor(d => d.Phase.Duration)
+            @Html.TextBoxFor(d => d.Phase.Duration, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Phase.Duration)
+        }
+    </div>
+
+    <div class="form-group">
+        @if (Model.Phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect ||
+                                Model.Phase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate ||
+                                Model.Phase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect ||
+                                Model.Phase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+        {
+            @Html.LabelFor(d => d.Phase.TargetYq)
+            @Html.TextBoxFor(d => d.Phase.TargetYq, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Phase.TargetYq)
+        }
+    </div>
+
+    <div class="form-group">
+        @if (Model.Phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate ||
+                                Model.Phase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate ||
+                                Model.Phase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate ||
+                                Model.Phase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+        {
+            @Html.LabelFor(d => d.Phase.GrowthRateFactor)
+            @Html.TextBoxFor(d => d.Phase.GrowthRateFactor, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Phase.GrowthRateFactor)
+        }
+    </div>
+
+    <button type="submit" class="btn btn-danger">Save Phase</button>
+
+}

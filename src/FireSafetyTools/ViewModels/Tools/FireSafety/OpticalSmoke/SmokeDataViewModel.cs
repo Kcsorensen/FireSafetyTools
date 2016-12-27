@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 
-namespace FireSafetyTools.ViewModel.Tools.FireSafety.OpticalSmoke
+namespace FireSafetyTools.ViewModels.Tools.FireSafety.OpticalSmoke
 {
 
     public class SmokeDataViewModel

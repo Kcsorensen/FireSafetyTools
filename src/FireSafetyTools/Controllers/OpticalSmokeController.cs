@@ -1,6 +1,6 @@
 using FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke;
 using FireSafetyTools.Services;
-using FireSafetyTools.ViewModel.Tools.FireSafety.OpticalSmoke;
+using FireSafetyTools.ViewModels.Tools.FireSafety.OpticalSmoke;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireSafetyTools.Controllers
@@ -69,8 +69,6 @@ namespace FireSafetyTools.Controllers
             var viewModel = HttpContext.Session.GetObjectFromJson<SmokeDataViewModel>(SessionNames.SmokeData);
 
             viewModel.ClearSmokeData();
-
-            //var smokeData = new SmokeData();
 
             HttpContext.Session.SetObjectAsJson(SessionNames.SmokeData, viewModel);
 

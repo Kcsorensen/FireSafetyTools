@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSerializer.Test", "Json
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmokeUnitConverter.Test", "SmokeUnitConverter.Test\SmokeUnitConverter.Test.csproj", "{E645006B-963D-4CE3-9405-9557550E003B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignFire.Test", "DesignFire.Test\DesignFire.Test.csproj", "{1038F527-8C8E-4128-8C24-A9FA8500A5B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{E645006B-963D-4CE3-9405-9557550E003B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E645006B-963D-4CE3-9405-9557550E003B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E645006B-963D-4CE3-9405-9557550E003B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1038F527-8C8E-4128-8C24-A9FA8500A5B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1038F527-8C8E-4128-8C24-A9FA8500A5B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1038F527-8C8E-4128-8C24-A9FA8500A5B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1038F527-8C8E-4128-8C24-A9FA8500A5B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +50,6 @@ Global
 		{14F0E8C0-3D4B-4F1D-84A8-FA3E1C6BC86C} = {B032C22A-59E2-458A-9EFD-86BEDFABC53B}
 		{99D87CC3-691A-477C-86BA-2B245BB72718} = {C0476DFF-35BD-482B-9ED9-7A404C75FD1B}
 		{E645006B-963D-4CE3-9405-9557550E003B} = {C0476DFF-35BD-482B-9ED9-7A404C75FD1B}
+		{1038F527-8C8E-4128-8C24-A9FA8500A5B5} = {C0476DFF-35BD-482B-9ED9-7A404C75FD1B}
 	EndGlobalSection
 EndGlobal

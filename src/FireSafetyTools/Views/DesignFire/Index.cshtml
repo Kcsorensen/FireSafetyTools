@@ -1,0 +1,132 @@
+﻿@using System.Threading.Tasks
+@using FireSafetyTools.Models.Tools.FireSafety.DesignFire
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using Newtonsoft.Json
+@model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.DesignFireViewModel
+
+@{
+    ViewBag.Title = "CreationKit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Design Fire Creation Kit</h2>
+
+
+<div id="divtable" style="margin-top: 30px">
+    <table class="table table-hover">
+        <tr>
+            <th>#</th>
+            <th>Phase</th>
+            <th>Duration</th>
+            <th>Effect</th>
+        </tr>
+
+        @foreach (var phase in Model.Phases)
+        {
+            <tr>
+                <td>@phase.Id</td>
+                <td>@phase.Name</td>
+                <td>@phase.Duration s </td>
+                <td>@phase.TargetYq kW</td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+
+<div class="inline" style="position: relative;">
+
+    <div class="dropup" style="display: inline;" id="PhaseTypeId" Name="PhaseTypeIdId">
+        <button id="dropUpMenu" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            Add a Phase
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.GrowthKnownDurationAndGrowthRate }, null)</li>
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndTargetEffect).Name, "New", "DesignFire", new { id = PhaseType.GrowthKnownDurationAndTargetEffect }, null)</li>
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.GrowthKnownTargetEffectAndGrowthRate }, null)</li>
+            <li role="separator" class="divider"></li>
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.SteadyKnownDuration).Name, "New", "DesignFire", new { id = PhaseType.SteadyKnownDuration }, null)</li>
+            <li role="separator" class="divider"></li>
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownDurationAndGrowthRate }, null)</li>
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndTargetEffect).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownDurationAndTargetEffect }, null)</li>
+            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownTargetEffectAndGrowthRate }, null)</li>
+        </ul>
+    </div>
+    
+    <div id="dataforchart" class="hidden" data-chart="@Model.ChartDataJsonString"></div>
+
+    <button id="createchart" class="btn btn-warning" type="button" style="display: inline">Clear</button>
+    <button class="btn btn-danger" type="button" style="display: inline">Export</button>
+    
+
+</div>
+
+<div id="myfirstchart" style="height: 250px; margin-top: 60px"></div>
+
+<style>
+    div.inline {
+        margin-top: 30px;
+    }
+
+    table {
+        padding: 20px;
+    }
+
+        table tr {
+        }
+
+    #divtable {
+        height: 500px;
+        background: lightblue;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 20px;
+    }
+</style>
+
+@section scripts {
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+
+            var datachart = $("#dataforchart").attr("data-chart");
+
+            var jsondata = JSON.parse(datachart);
+
+            $("#createchart").on("click", function() {
+                new Morris.Line({
+                    // ID of the element in which to draw the chart.
+                    element: 'myfirstchart',
+                    // Chart data records -- each entry in this array corresponds to a point on
+                    // the chart.
+
+                    data: jsondata,
+                    //data: [
+
+                    //  { year: '2008', value: 20 },
+                    //  { year: '2009', value: 10 },
+                    //  { year: '2010', value: 5 },
+                    //  { year: '2011', value: 5 },
+                    //  { year: '2012', value: 20 }
+                    //],
+                    // The name of the data record attribute that contains x-values.
+                    xkey: "Time",
+                    // A list of names of data record attributes that contain y-values.
+                    ykeys: ["Effect"],
+                    // Labels for the ykeys -- will be displayed when you hover over the
+                    // chart.
+                    labels: ["Effect"]
+                });
+            });
+        });
+
+    </script>
+
+}
+
