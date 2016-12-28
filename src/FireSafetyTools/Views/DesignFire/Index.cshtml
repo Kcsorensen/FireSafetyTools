@@ -99,30 +99,34 @@
 
             var jsondata = JSON.parse(datachart);
 
+            new Morris.Area({
+
+                // ID of the element in which to draw the chart.
+                element: 'myfirstchart',
+
+                // Chart data records -- each entry in this array corresponds to a point on
+                data: jsondata,
+
+                // Array containing colors for the series lines/points.
+                lineColors: ["#AB0E0E"],
+
+                // Set to false to skip time/date parsing for X values, instead treating them as an equally-spaced series.
+                parseTime: false,
+
+                // The name of the data record attribute that contains x-values.
+                xkey: "Time",
+                
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ["Effect"],
+                units: " kW",
+                    
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ["Effect"]
+            });
+
             $("#createchart").on("click", function() {
-                new Morris.Line({
-                    // ID of the element in which to draw the chart.
-                    element: 'myfirstchart',
-                    // Chart data records -- each entry in this array corresponds to a point on
-                    // the chart.
 
-                    data: jsondata,
-                    //data: [
-
-                    //  { year: '2008', value: 20 },
-                    //  { year: '2009', value: 10 },
-                    //  { year: '2010', value: 5 },
-                    //  { year: '2011', value: 5 },
-                    //  { year: '2012', value: 20 }
-                    //],
-                    // The name of the data record attribute that contains x-values.
-                    xkey: "Time",
-                    // A list of names of data record attributes that contain y-values.
-                    ykeys: ["Effect"],
-                    // Labels for the ykeys -- will be displayed when you hover over the
-                    // chart.
-                    labels: ["Effect"]
-                });
             });
         });
 

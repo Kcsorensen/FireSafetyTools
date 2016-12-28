@@ -19,6 +19,8 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         {
             newPhase.Id = Phases.Count + 1;
             newPhase.Name = PhaseTypes.Single(d => d.Id == newPhase.PhaseTypeId).Name;
+            this.LatestXt = newPhase.TargetXt;
+            this.LatestYq = newPhase.TargetYq;
 
             Phases.Add(newPhase);
 

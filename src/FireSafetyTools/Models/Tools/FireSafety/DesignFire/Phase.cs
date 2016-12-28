@@ -21,7 +21,6 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
         [Display(Name = "Target Effect")]
         [Range(0.0, Double.MaxValue, ErrorMessage = "This value has to be greater then zero")]
         public double TargetYq { get; set; }
-
         public double TargetXt { get; set; }
         public double TotalEnergyReleased { get; set; }
         public double InitialXt { get; set; }
