@@ -45,8 +45,7 @@
       "type": "build"
     },
     "Microsoft.AspNetCore.Session": "1.1.0",
-    "Microsoft.Extensions.Caching.Memory": "1.1.0"
-  },
+    "Microsoft.Extensions.Caching.Memory": "1.1.0"  },
 
   "tools": {
     "BundlerMinifier.Core": "2.0.238",

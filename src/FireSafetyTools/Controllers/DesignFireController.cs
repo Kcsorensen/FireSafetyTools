@@ -84,5 +84,21 @@ namespace FireSafetyTools.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult ClearTable()
+        {
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            designFireViewModel.ClearPhases();
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+
+            return View("Index", designFireViewModel);
+        }
     }
 }

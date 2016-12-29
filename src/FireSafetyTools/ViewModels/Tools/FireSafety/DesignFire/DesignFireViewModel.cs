@@ -40,24 +40,36 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             PhaseTypes = new List<PhaseType>
             {
                 new PhaseType {Id = 0, Name = "Growth (duration, growth rate)"},
-                new PhaseType {Id = 1, Name = "Growth (target effect, growth rate)"},
-                new PhaseType {Id = 2, Name = "Growth (target effect, duration)"},
+                new PhaseType {Id = 1, Name = "Growth (duration, target effect)"},
+                new PhaseType {Id = 2, Name = "Growth (target effect, growth rate)"},
                 new PhaseType {Id = 3, Name = "Steady (duration)"},
                 new PhaseType {Id = 4, Name = "Decay (duration, growth rate)"},
-                new PhaseType {Id = 5, Name = "Decay (target effect, growth rate)"},
-                new PhaseType {Id = 6, Name = "Decay (target effect, duration)"},
+                new PhaseType {Id = 5, Name = "Decay (duration, target effect)"},
+                new PhaseType {Id = 6, Name = "Decay (target effect, growth rate)"},
             };
 
             ChartDataPoints = new List<DataPoint>
             {
                 new DataPoint {Id = 0, Time = 0.0, Effect = 0.0}
             };
+
+            ChartDataJsonString = JsonConvert.SerializeObject(ChartDataPoints);
         }
 
         private void ClearChartData()
         {
             ChartDataPoints.Clear();
             ChartDataPoints.Add(new DataPoint { Id = 0, Time = 0.0, Effect = 0.0 });
+        }
+
+        public void ClearPhases()
+        {
+            State.LatestXt = 0.0;
+            State.LatestYq = 0.0;
+            Phases.Clear();
+            ChartDataPoints.Clear();
+            ChartDataPoints.Add(new DataPoint { Id = 0, Time = 0.0, Effect = 0.0 });
+            ChartDataJsonString = JsonConvert.SerializeObject(ChartDataPoints);
         }
 
         public void UpdateState()
