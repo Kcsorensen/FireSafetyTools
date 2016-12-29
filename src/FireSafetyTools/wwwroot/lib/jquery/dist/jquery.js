@@ -1312,7 +1312,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			return compare;
 		}
 
-		// Calculate position if both inputs belong to the same document
+		// GeneratePhase position if both inputs belong to the same document
 		compare = ( a.ownerDocument || a ) === ( b.ownerDocument || b ) ?
 			a.compareDocumentPosition( b ) :
 
@@ -4826,7 +4826,7 @@ jQuery.event = {
 			var eventDoc, doc, body,
 				button = original.button;
 
-			// Calculate pageX/Y if missing and clientX/Y available
+			// GeneratePhase pageX/Y if missing and clientX/Y available
 			if ( event.pageX == null && original.clientX != null ) {
 				eventDoc = event.target.ownerDocument || document;
 				doc = eventDoc.documentElement;

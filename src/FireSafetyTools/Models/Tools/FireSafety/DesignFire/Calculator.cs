@@ -6,13 +6,13 @@ using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
 
 namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 {
-    public class PhaseCalculator
+    public class Calculator
     {
         private readonly int _stepsGrowthPhase;
         private readonly int _stepsSteadyPhase;
         private readonly int _stepsDecayPhase;
 
-        public PhaseCalculator()
+        public Calculator()
         {
             // This is the intermediate steps and last step. First is beside these steps.
             // First step is the previous phase last step, which is not applied again in this phase.
@@ -23,12 +23,14 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             _stepsDecayPhase = 10;
         }
 
-        public Phase Calculate(PhaseFormViewModel phaseViewModel, State state)
+        public Phase GeneratePhase(PhaseFormViewModel phaseViewModel, State state)
         {
             var updatedPhase = new Phase();
 
             if (state.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
             {
+                updatedPhase.Id = state.PhasesCount + 1;
+                updatedPhase.Name = state.Name;
                 updatedPhase.Duration = phaseViewModel.Duration;
                 updatedPhase.GrowthRateFactor = phaseViewModel.GrowthRateFactor;
                 updatedPhase.InitialXt = state.LatestXt;
@@ -37,9 +39,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
                 updatedPhase.TargetYq = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow(updatedPhase.Duration, 2);
 
-                updatedPhase.TotalEnergyReleased = (1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                                                   Math.Round(updatedPhase.Duration, 3) +
-                                                   updatedPhase.InitialYq * updatedPhase.Duration;
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                                                   Math.Pow(updatedPhase.Duration, 3) +
+                                                   updatedPhase.InitialYq * updatedPhase.Duration)/1000.0),2);
 
                 updatedPhase.PhaseDataPoints = new List<DataPoint>();
 

@@ -16,7 +16,8 @@
             <th>#</th>
             <th>Phase</th>
             <th>Duration</th>
-            <th>Effect</th>
+            <th>Max Effect</th>
+            <th>Total Energy</th>
         </tr>
 
         @foreach (var phase in Model.Phases)
@@ -26,6 +27,7 @@
                 <td>@phase.Name</td>
                 <td>@phase.Duration s </td>
                 <td>@phase.TargetYq kW</td>
+                <td>@phase.TotalEnergyReleased MJ</td>
             </tr>
         }
 

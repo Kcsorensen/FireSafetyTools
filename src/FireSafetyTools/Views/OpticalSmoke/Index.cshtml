@@ -15,14 +15,14 @@
     
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
-                @Html.Label("Calculate from")
+                @Html.Label("GeneratePhase from")
                 @Html.DropDownListFor(s => s._smokeData.ConvertFromId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
             </div>
         </li>
 
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
-                @Html.Label("Calculate to")
+                @Html.Label("GeneratePhase to")
                 @Html.DropDownListFor(s => s._smokeData.ConvertToId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
 
             </div>
@@ -108,7 +108,7 @@
     <div id="clearline"></div>
     
     <div>
-        <button type="submit" class="btn btn-primary">Calculate</button>
+        <button type="submit" class="btn btn-primary">GeneratePhase</button>
         @Html.ActionLink("Clear", "ClearSmokeData", "OpticalSmoke", null, new { @class = "btn btn-warning" })
     </div>
 }
@@ -168,7 +168,7 @@
                     textElements[i].style.display = "none";
                 };
 
-                // Calculate_to = SmokePotentialArgos
+                // GeneratePhase_to = SmokePotentialArgos
                 if (convertTo.value === "@SmokeUnit.SmokePotentialArgos") {
 
                     if (convertFrom.value === "@SmokeUnit.SmokePotentialFuel") {
@@ -194,7 +194,7 @@
                     }
                 };
 
-                // Calculate_to = SmokePotentialFuel
+                // GeneratePhase_to = SmokePotentialFuel
                 if (convertTo.value === "@SmokeUnit.SmokePotentialFuel") {
 
                     if (convertFrom.value === "@SmokeUnit.SmokePotentialArgos") {
@@ -216,7 +216,7 @@
                     }
                 };
 
-                // Calculate_to = SmokeProduction
+                // GeneratePhase_to = SmokeProduction
                 if (convertTo.value === "@SmokeUnit.SmokeProduction") {
 
                     if (convertFrom.value === "@SmokeUnit.SmokePotentialArgos") {
@@ -240,7 +240,7 @@
                     }
                 };
 
-                // Calculate_to = SootYield
+                // GeneratePhase_to = SootYield
                 if (convertTo.value === "@SmokeUnit.SootYield") {
 
                     if (convertFrom.value === "@SmokeUnit.SmokePotentialArgos") {

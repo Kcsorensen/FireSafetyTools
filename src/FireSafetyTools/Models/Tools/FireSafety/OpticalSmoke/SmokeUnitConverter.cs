@@ -24,7 +24,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
                 return data;
             }
 
-            #region Calculate To Smoke Potential Argos
+            #region GeneratePhase To Smoke Potential Argos
 
             if (fromUnitIndex == SmokeUnit.SootYield && toUnitIndex == SmokeUnit.SmokePotentialArgos)
             {
@@ -43,7 +43,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
 
             #endregion
 
-            #region Calculate to Smoke Potential Fuel
+            #region GeneratePhase to Smoke Potential Fuel
 
             if (fromUnitIndex == SmokeUnit.SootYield && toUnitIndex == SmokeUnit.SmokePotentialFuel)
             {
@@ -62,7 +62,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
 
             #endregion
 
-            #region Calculate to Smoke Yield
+            #region GeneratePhase to Smoke Yield
 
             if (fromUnitIndex == SmokeUnit.SmokePotentialFuel && toUnitIndex == SmokeUnit.SootYield)
             {
@@ -81,7 +81,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.OpticalSmoke
 
             #endregion
 
-            #region Calculate to Smoke Production
+            #region GeneratePhase to Smoke Production
 
             if (fromUnitIndex == SmokeUnit.SmokePotentialFuel && toUnitIndex == SmokeUnit.SmokeProduction)
             {

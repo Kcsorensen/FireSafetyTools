@@ -69,13 +69,13 @@ namespace FireSafetyTools.Controllers
 
             var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
 
-            var phaseCalculator = new PhaseCalculator();
+            var phaseCalculator = new Calculator();
 
-            var updatedPhase = phaseCalculator.Calculate(phaseFormViewModel, designFireViewModel.State);
+            var updatedPhase = phaseCalculator.GeneratePhase(phaseFormViewModel, designFireViewModel.State);
 
             if (updatedPhase == null)
             {
-                throw new ArgumentNullException("updatedPhase as a result of phaseCalculator is null. From DesignFireController -> Save");
+                throw new ArgumentNullException("UpdatedPhase as a result of phaseCalculator is null. From DesignFireController -> Save");
             }
 
             designFireViewModel.AddPhase(updatedPhase);
