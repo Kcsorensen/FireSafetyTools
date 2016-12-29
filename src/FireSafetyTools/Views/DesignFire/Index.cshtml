@@ -9,16 +9,18 @@
 
 <h2>Design Fire Creation Kit</h2>
 
-
 <div id="divtable" style="margin-top: 30px">
     <table class="table table-hover">
-        <tr>
+        <tr style="border-bottom: 1px solid gray">
             <th>#</th>
             <th>Phase</th>
             <th>Duration</th>
+            <th>Growth Rate</th>
             <th>Max Effect</th>
             <th>Total Energy</th>
         </tr>
+        
+
 
         @foreach (var phase in Model.Phases)
         {
@@ -26,6 +28,7 @@
                 <td>@phase.Id</td>
                 <td>@phase.Name</td>
                 <td>@phase.Duration s </td>
+                <td>@phase.GrowthRateFactor</td>
                 <td>@phase.TargetYq kW</td>
                 <td>@phase.TotalEnergyReleased MJ</td>
             </tr>
@@ -33,6 +36,9 @@
 
     </table>
 </div>
+
+
+
 
 
 <div class="inline" style="position: relative;">
@@ -57,13 +63,11 @@
     </div>
 
     <div id="dataforchart" class="hidden" data-chart="@Model.ChartDataJsonString"></div>
-
-    <button class="btn btn-warning" type="button" style="display: inline">Clear</button>
+    
+    @Html.ActionLink("Clear", "ClearTable", "DesignFire", null, new { @class = "btn btn-warning" })
     <button class="btn btn-danger" type="button" style="display: inline">Export</button>
 
 </div>
-
-
 
 <div id="myfirstchart" style="height: 250px; margin-top: 60px"></div>
 
@@ -76,15 +80,15 @@
         padding: 20px;
     }
 
-        table tr {
-        }
+    table tr {
+        ;
+    }
 
     #divtable {
         height: 500px;
-        background: lightblue;
-        border: 1px solid gray;
-        border-radius: 5px;
-        padding: 20px;
+        border-bottom: 1px solid gray;
+        border-top: 1px solid gray;
+
     }
 </style>
 
