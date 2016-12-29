@@ -1,7 +1,5 @@
 ﻿@using System.Threading.Tasks
 @using FireSafetyTools.Models.Tools.FireSafety.DesignFire
-@using Microsoft.EntityFrameworkCore.Metadata.Internal
-@using Newtonsoft.Json
 @model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.DesignFireViewModel
 
 @{
@@ -37,6 +35,7 @@
 
 <div class="inline" style="position: relative;">
 
+
     <div class="dropup" style="display: inline;" id="PhaseTypeId" Name="PhaseTypeIdId">
         <button id="dropUpMenu" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
             Add a Phase
@@ -54,14 +53,15 @@
             <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownTargetEffectAndGrowthRate }, null)</li>
         </ul>
     </div>
-    
+
     <div id="dataforchart" class="hidden" data-chart="@Model.ChartDataJsonString"></div>
 
-    <button id="createchart" class="btn btn-warning" type="button" style="display: inline">Clear</button>
+    <button class="btn btn-warning" type="button" style="display: inline">Clear</button>
     <button class="btn btn-danger" type="button" style="display: inline">Export</button>
-    
 
 </div>
+
+
 
 <div id="myfirstchart" style="height: 250px; margin-top: 60px"></div>
 

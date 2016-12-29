@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
 
 namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 {
@@ -22,19 +23,19 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             _stepsDecayPhase = 10;
         }
 
-        public Phase Calculate(Phase phase)
+        public Phase Calculate(PhaseFormViewModel phaseViewModel, State state)
         {
             var updatedPhase = new Phase();
 
-            if (phase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
+            if (state.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
             {
-                updatedPhase.Duration = phase.Duration;
-                updatedPhase.GrowthRateFactor = phase.GrowthRateFactor;
-                updatedPhase.InitialXt = phase.InitialXt;
-                updatedPhase.InitialYq = phase.InitialYq;
+                updatedPhase.Duration = phaseViewModel.Duration;
+                updatedPhase.GrowthRateFactor = phaseViewModel.GrowthRateFactor;
+                updatedPhase.InitialXt = state.LatestXt;
+                updatedPhase.InitialYq = state.LatestYq;
 
-                updatedPhase.TargetYq = phase.InitialYq + phase.GrowthRateFactor * Math.Pow(phase.Duration, 2);
-                updatedPhase.TargetXt = phase.InitialXt + phase.Duration;
+                updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
+                updatedPhase.TargetYq = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow(updatedPhase.Duration, 2);
 
                 updatedPhase.TotalEnergyReleased = (1.0 / 3.0) * updatedPhase.GrowthRateFactor *
                                                    Math.Round(updatedPhase.Duration, 3) +
@@ -44,6 +45,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                 var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
 
+                // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
                     var newTime = updatedPhase.InitialXt + stepsize * i;

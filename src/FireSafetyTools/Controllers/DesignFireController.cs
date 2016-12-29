@@ -23,7 +23,7 @@ namespace FireSafetyTools.Controllers
             return View(viewModel);
         }
 
-        public IActionResult New(double latestXt, double latestYq, int id)
+        public IActionResult New(int id)
         {
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
             {
@@ -37,36 +37,46 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
-            var phaseViewModel = new PhaseViewModel(latestXt, latestYq, id);
+            designFireViewModel.PhaseTypeId = id;
+            designFireViewModel.UpdateState();
 
-            return View("PhaseForm", phaseViewModel);
+            HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+
+            var phaseFormViewModel = new PhaseFormViewModel {PhaseTypeId = id};
+
+            return View("PhaseForm", phaseFormViewModel);
         }
 
         [HttpPost]
-        public IActionResult Save(Phase phase)
+        public IActionResult Save(PhaseFormViewModel phaseFormViewModel)
         {
             if (!ModelState.IsValid)
             {
-                var phaseViewModel = new PhaseViewModel(phase);
+                var viewModel = new PhaseFormViewModel();
 
-                return View("PhaseForm", phaseViewModel);
+                return View("PhaseForm", viewModel);
             }
 
-            if (phase == null)
+            if (phaseFormViewModel == null)
             {
                 return NotFound();
             }
 
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
             var phaseCalculator = new PhaseCalculator();
 
-            var updatedPhase = phaseCalculator.Calculate(phase);
+            var updatedPhase = phaseCalculator.Calculate(phaseFormViewModel, designFireViewModel.State);
 
             if (updatedPhase == null)
             {
                 throw new ArgumentNullException("updatedPhase as a result of phaseCalculator is null. From DesignFireController -> Save");
             }
-
-            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
 
             designFireViewModel.AddPhase(updatedPhase);
 

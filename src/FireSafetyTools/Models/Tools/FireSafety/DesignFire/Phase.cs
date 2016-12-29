@@ -32,18 +32,25 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
         }
 
-        public Phase(double latestXt, double latestYq, int phaseTypeId)
+        public Phase(State state)
         {
-            InitialXt = latestXt;
-            InitialYq = latestYq;
-            PhaseTypeId = phaseTypeId;
+            if (state == null)
+            {
+                throw new ArgumentNullException("State in Phase constructor cannot be null");
+            }
+
+            Id = state.PhasesCount + 1;
+            InitialXt = state.LatestXt;
+            InitialYq = state.LatestYq;
+            Name = state.Name;
+            //PhaseTypeId = state.PhaseTypeId;
         }
 
         public List<DataPoint> GetDataPoints()
         {
             if (PhaseDataPoints == null)
             {
-                throw new ArgumentNullException("PhaseDataPoints in Phase cant be null when executing method GetDataPoints");
+                throw new ArgumentNullException("PhaseDataPoints in Phase cannot be null when executing method GetDataPoints");
             }
 
             return PhaseDataPoints;

@@ -12,15 +12,12 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         public List<DataPoint> ChartDataPoints { get; set; }
         public string ChartDataJsonString { get; set; }
         public int PhaseTypeId { get; set; }
-        public double LatestXt { get; set; }
-        public double LatestYq { get; set; }
+        public State State { get; set; }
 
         public void AddPhase(Phase newPhase)
         {
-            newPhase.Id = Phases.Count + 1;
-            newPhase.Name = PhaseTypes.Single(d => d.Id == newPhase.PhaseTypeId).Name;
-            this.LatestXt = newPhase.TargetXt;
-            this.LatestYq = newPhase.TargetYq;
+            State.LatestXt = newPhase.TargetXt;
+            State.LatestYq = newPhase.TargetYq;
 
             Phases.Add(newPhase);
 
@@ -36,8 +33,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
         public void Initiate()
         {
-            LatestXt = 0.0;
-            LatestYq = 0.0;
+            State = new State();
 
             Phases = new List<Phase>();
 
@@ -62,6 +58,13 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         {
             ChartDataPoints.Clear();
             ChartDataPoints.Add(new DataPoint { Id = 0, Time = 0.0, Effect = 0.0 });
+        }
+
+        public void UpdateState()
+        {
+            State.PhasesCount = Phases.Count;
+            State.Name = PhaseTypes.Single(d => d.Id == PhaseTypeId).Name;
+            State.PhaseTypeId = this.PhaseTypeId;
         }
     }
 }
