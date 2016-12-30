@@ -100,5 +100,12 @@ namespace FireSafetyTools.Controllers
 
             return View("Index", designFireViewModel);
         }
+
+        public IActionResult GetValues()
+        {
+            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            return Content(designFireViewModel.XAxis);
+        }
     }
 }

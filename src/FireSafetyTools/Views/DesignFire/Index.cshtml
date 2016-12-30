@@ -1,4 +1,5 @@
-﻿@using System.Threading.Tasks
+﻿@using System.Threading
+@using System.Threading.Tasks
 @using FireSafetyTools.Models.Tools.FireSafety.DesignFire
 @model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.DesignFireViewModel
 
@@ -62,14 +63,16 @@
         </ul>
     </div>
 
-    <div id="dataforchart" class="hidden" data-chart="@Model.ChartDataJsonString"></div>
+    <div id="xaxis" class="hidden" data-chart="@Model.XAxis"></div>
+    <div id="yaxis" class="hidden" data-chart="@Model.YAxis"></div>
     
     @Html.ActionLink("Clear", "ClearTable", "DesignFire", null, new { @class = "btn btn-warning" })
     <button class="btn btn-danger" type="button" style="display: inline">Export</button>
 
 </div>
 
-<div id="myfirstchart" style="height: 250px; margin-top: 60px"></div>
+@*<div id="myfirstchart" style="height: 250px; margin-top: 60px"></div>*@
+<div id="myDiv" style="width: 480px; height: 400px;"></div>
 
 <style>
     div.inline {
@@ -80,61 +83,101 @@
         padding: 20px;
     }
 
-    table tr {
-        ;
-    }
+        table tr {
+            ;
+        }
 
     #divtable {
         height: 500px;
         border-bottom: 1px solid gray;
         border-top: 1px solid gray;
-
     }
 </style>
 
 @section scripts {
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    @*<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>*@
+    <script src="~/lib/plotly.js-1.21.2/dist/plotly.min.js"></script>
     <script>
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            var datachart = $("#dataforchart").attr("data-chart");
 
-            var jsondata = JSON.parse(datachart);
+            $(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetValues")",
+                    success: function(result) {
 
-            new Morris.Area({
+                        var test = JSON.parse(result);
+                        //var test2 = "1, 2, 3, 4";
+                        //var test = [1, 2, 3, 4];
 
-                // ID of the element in which to draw the chart.
-                element: 'myfirstchart',
+                        var trace1 = {
+                            //x: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 200],
+                            x: test,
+                            y: [0, 2, 3, 4, 10, 50, 65, 125, 80, 45, 215],
+                            fill: 'tozeroy',
+                            type: 'scatter'
+                        };
 
-                // Chart data records -- each entry in this array corresponds to a point on
-                data: jsondata,
+                        var data = [trace1];
 
-                // Array containing colors for the series lines/points.
-                lineColors: ["#AB0E0E"],
+                        Plotly.newPlot('myDiv', data);
 
-                // Set to false to skip time/date parsing for X values, instead treating them as an equally-spaced series.
-                parseTime: false,
-
-                // The name of the data record attribute that contains x-values.
-                xkey: "Time",
-                
-                // A list of names of data record attributes that contain y-values.
-                ykeys: ["Effect"],
-                units: " kW",
-                    
-                // Labels for the ykeys -- will be displayed when you hover over the
-                // chart.
-                labels: ["Effect"]
+                        //confirm(result);
+                    }
+                });
             });
 
-            $("#createchart").on("click", function() {
+            //var trace1 = {
+            //    x: xAxisData,
+            //    y: yAxisData,
+            //    fill: 'tozeroy',
+            //    type: 'scatter'
+            //};
 
-            });
+            //var data = [trace1];
+
+            //Plotly.newPlot('myDiv', data);
+
+            //var datachart = $("#dataforchart").attr("data-chart");
+
+            //var jsondata = JSON.parse(datachart);
+
+            //new Morris.Area({
+
+            //    // ID of the element in which to draw the chart.
+            //    element: 'myfirstchart',
+
+            //    // Chart data records -- each entry in this array corresponds to a point on
+            //    data: jsondata,
+
+            //    // Array containing colors for the series lines/points.
+            //    lineColors: ["#AB0E0E"],
+
+            //    // Set to false to skip time/date parsing for X values, instead treating them as an equally-spaced series.
+            //    parseTime: false,
+
+            //    // The name of the data record attribute that contains x-values.
+            //    xkey: "Time",
+
+            //    // A list of names of data record attributes that contain y-values.
+            //    ykeys: ["Effect"],
+            //    units: " kW",
+
+            //    // Labels for the ykeys -- will be displayed when you hover over the
+            //    // chart.
+            //    labels: ["Effect"]
+            //});
+
+            //$("#createchart").on("click", function() {
+
+            //});
         });
+
 
     </script>
 
