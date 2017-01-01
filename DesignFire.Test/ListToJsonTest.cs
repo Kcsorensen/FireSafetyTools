@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 namespace DesignFire.Test
 {
     [TestClass]
-    public class ListToJson
+    public class ListToJsonTest
     {
         [TestMethod]
         public void ListToJsonString()

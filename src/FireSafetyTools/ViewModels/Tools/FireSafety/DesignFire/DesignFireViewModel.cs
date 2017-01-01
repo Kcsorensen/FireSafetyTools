@@ -10,7 +10,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         public List<Phase> Phases { get; set; }
         public List<PhaseType> PhaseTypes { get; set; }
         public List<DataPoint> ChartDataPoints { get; set; }
-        public string ChartDataJsonString { get; set; }
         public string XAxis { get; set; }
         public string YAxis { get; set; }
         public int PhaseTypeId { get; set; }
@@ -30,13 +29,11 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 ChartDataPoints.AddRange(phase.GetDataPoints());
             }
 
-            ChartDataJsonString = JsonConvert.SerializeObject(ChartDataPoints);
-
             var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
             var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
 
             XAxis = JsonConvert.SerializeObject(xAxisArray);
-            YAxis = string.Join(",", yAxisArray);
+            YAxis = JsonConvert.SerializeObject(yAxisArray);
 
         }
 
@@ -61,8 +58,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             {
                 new DataPoint {Id = 0, Time = 0.0, Effect = 0.0}
             };
-
-            ChartDataJsonString = JsonConvert.SerializeObject(ChartDataPoints);
         }
 
         private void ClearChartData()
@@ -78,9 +73,11 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             Phases.Clear();
             ChartDataPoints.Clear();
             ChartDataPoints.Add(new DataPoint { Id = 0, Time = 0.0, Effect = 0.0 });
-            ChartDataJsonString = JsonConvert.SerializeObject(ChartDataPoints);
+            var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
+            var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
 
-
+            XAxis = JsonConvert.SerializeObject(xAxisArray);
+            YAxis = JsonConvert.SerializeObject(yAxisArray);
         }
 
         public void UpdateState()

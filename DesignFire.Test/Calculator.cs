@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
 
-namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
+namespace DesignFire.Test
 {
     public class Calculator
     {
@@ -183,19 +182,19 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                                                            Math.Pow(updatedPhase.Duration, 2), 4);
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
                     var newEffect =
                         Math.Round((updatedPhase.InitialYq -
-                                    updatedPhase.GrowthRateFactor *
+                                    updatedPhase.GrowthRateFactor*
                                     (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                                     Math.Pow((updatedPhase.Duration - (stepsize*i - updatedPhase.InitialXt)), 2))));
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
@@ -207,22 +206,22 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
-                updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq) / updatedPhase.GrowthRateFactor)), 1);
+                updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq) /updatedPhase.GrowthRateFactor)), 1);
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
                     var newEffect =
                         Math.Round((updatedPhase.InitialYq -
-                                    updatedPhase.GrowthRateFactor *
+                                    updatedPhase.GrowthRateFactor*
                                     (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                                     Math.Pow((updatedPhase.Duration - (stepsize*i - updatedPhase.InitialXt)), 2))));
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
@@ -391,7 +390,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
 
-                    updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.InitialYq - updatedPhase.TargetYq) /
+                    updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.TargetYq - updatedPhase.InitialYq) /
                                                                Math.Pow(updatedPhase.Duration, 2), 4);
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
@@ -411,6 +410,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
+
                 }
 
                 if (state.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
@@ -418,7 +418,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
-                    updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq) / updatedPhase.GrowthRateFactor)), 1);
+                    updatedPhase.Duration =
+                        Math.Round(
+                            (Math.Sqrt((updatedPhase.TargetYq - updatedPhase.InitialYq) / updatedPhase.GrowthRateFactor)), 1);
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
                     var stepsize = updatedPhase.Duration / (_stepsDecayPhase);

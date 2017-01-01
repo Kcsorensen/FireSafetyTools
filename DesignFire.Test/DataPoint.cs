@@ -8,6 +8,7 @@ namespace DesignFire.Test
 {
     public class DataPoint
     {
+        public int Id { get; set; }
         public double Time { get; set; }
         public double Effect { get; set; }
     }

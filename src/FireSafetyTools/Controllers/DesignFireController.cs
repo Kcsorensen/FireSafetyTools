@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using FireSafetyTools.Models.Tools.FireSafety.DesignFire;
 using FireSafetyTools.Services;
 using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
@@ -48,7 +49,7 @@ namespace FireSafetyTools.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save(PhaseFormViewModel phaseFormViewModel)
+        public async Task<IActionResult> Save(PhaseFormViewModel phaseFormViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +72,7 @@ namespace FireSafetyTools.Controllers
 
             var phaseCalculator = new Calculator();
 
-            var updatedPhase = phaseCalculator.GeneratePhase(phaseFormViewModel, designFireViewModel.State);
+            var updatedPhase = await phaseCalculator.GeneratePhaseAsync(phaseFormViewModel, designFireViewModel.State);
 
             if (updatedPhase == null)
             {
@@ -99,13 +100,6 @@ namespace FireSafetyTools.Controllers
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
             return View("Index", designFireViewModel);
-        }
-
-        public IActionResult GetValues()
-        {
-            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
-
-            return Content(designFireViewModel.XAxis);
         }
     }
 }
