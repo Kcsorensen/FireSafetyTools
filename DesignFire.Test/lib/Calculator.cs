@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DesignFire.Test
+namespace DesignFire.Test.lib
 {
     public class Calculator
     {
@@ -74,7 +74,7 @@ namespace DesignFire.Test
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
                     var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2);
+                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -100,7 +100,7 @@ namespace DesignFire.Test
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
                     var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2);
+                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -158,10 +158,10 @@ namespace DesignFire.Test
                 {
                     var newTime = updatedPhase.InitialXt + stepsize * i;
                     var newEffect =
-                        Math.Round((updatedPhase.InitialYq -
-                                    updatedPhase.GrowthRateFactor*
-                                    (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize*i - updatedPhase.InitialXt)), 2))));
+                        Math.Round((updatedPhase.InitialYq - 
+                        updatedPhase.GrowthRateFactor*
+                        (Math.Pow(updatedPhase.Duration, 2) - 
+                        Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))),2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -170,7 +170,7 @@ namespace DesignFire.Test
 
                 updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
                        Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
             }
 
             if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
@@ -192,13 +192,16 @@ namespace DesignFire.Test
                         Math.Round((updatedPhase.InitialYq -
                                     updatedPhase.GrowthRateFactor*
                                     (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize*i - updatedPhase.InitialXt)), 2))));
+                                     Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))),2);
 
                     var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                       Math.Pow(updatedPhase.Duration, 3) +
+                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
             }
 
             if (state.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
@@ -219,12 +222,16 @@ namespace DesignFire.Test
                         Math.Round((updatedPhase.InitialYq -
                                     updatedPhase.GrowthRateFactor*
                                     (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize*i - updatedPhase.InitialXt)), 2))));
+                                     Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))),2);
 
                     var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
+
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                       Math.Pow(updatedPhase.Duration, 3) +
+                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
             }
 
             #endregion

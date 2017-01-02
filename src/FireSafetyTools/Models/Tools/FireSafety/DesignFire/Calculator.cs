@@ -75,7 +75,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
                     var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2);
+                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -101,7 +101,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
                     var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2);
+                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -160,9 +160,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     var newTime = updatedPhase.InitialXt + stepsize * i;
                     var newEffect =
                         Math.Round((updatedPhase.InitialYq -
-                                    updatedPhase.GrowthRateFactor*
-                                    (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize*i - updatedPhase.InitialXt)), 2))));
+                        updatedPhase.GrowthRateFactor *
+                        (Math.Pow(updatedPhase.Duration, 2) -
+                        Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -171,7 +171,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                 updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
                        Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
             }
 
             if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
@@ -193,13 +193,16 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         Math.Round((updatedPhase.InitialYq -
                                     updatedPhase.GrowthRateFactor *
                                     (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                                     Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                       Math.Pow(updatedPhase.Duration, 3) +
+                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
             }
 
             if (state.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
@@ -220,12 +223,16 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         Math.Round((updatedPhase.InitialYq -
                                     updatedPhase.GrowthRateFactor *
                                     (Math.Pow(updatedPhase.Duration, 2) -
-                                     Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                                     Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
                     var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
+
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                       Math.Pow(updatedPhase.Duration, 3) +
+                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
             }
 
             #endregion
@@ -287,7 +294,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                     {
                         var newTime = updatedPhase.InitialXt + stepsize * i;
-                        var newEffect = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2);
+                        var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
                         var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -313,7 +320,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                     {
                         var newTime = updatedPhase.InitialXt + stepsize * i;
-                        var newEffect = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2);
+                        var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
                         var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -372,9 +379,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         var newTime = updatedPhase.InitialXt + stepsize * i;
                         var newEffect =
                             Math.Round((updatedPhase.InitialYq -
-                                        updatedPhase.GrowthRateFactor *
-                                        (Math.Pow(updatedPhase.Duration, 2) -
-                                         Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                            updatedPhase.GrowthRateFactor *
+                            (Math.Pow(updatedPhase.Duration, 2) -
+                            Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
                         var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
@@ -383,7 +390,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                     updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
                            Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                           updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
                 }
 
                 if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
@@ -405,12 +412,16 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                             Math.Round((updatedPhase.InitialYq -
                                         updatedPhase.GrowthRateFactor *
                                         (Math.Pow(updatedPhase.Duration, 2) -
-                                         Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                                         Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
                         var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
+
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                           Math.Pow(updatedPhase.Duration, 3) +
+                           updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
                 }
 
                 if (state.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
@@ -431,12 +442,16 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                             Math.Round((updatedPhase.InitialYq -
                                         updatedPhase.GrowthRateFactor *
                                         (Math.Pow(updatedPhase.Duration, 2) -
-                                         Math.Pow((updatedPhase.Duration - (stepsize * i - updatedPhase.InitialXt)), 2))));
+                                         Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
                         var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
+
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
+                           Math.Pow(updatedPhase.Duration, 3) +
+                           updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
                 }
 
                 #endregion

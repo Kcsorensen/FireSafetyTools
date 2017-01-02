@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DesignFire.Test.lib;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DesignFire.Test
 {

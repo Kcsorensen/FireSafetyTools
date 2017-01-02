@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DesignFire.Test
+namespace DesignFire.Test.lib
 {
     public class Phase
     {
