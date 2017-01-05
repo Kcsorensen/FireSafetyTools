@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using FireSafetyTools.Dtos.Tools.FireSafety;
 using FireSafetyTools.Models.Tools.FireSafety.DesignFire;
 using FireSafetyTools.Services;
 using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
@@ -83,7 +84,7 @@ namespace FireSafetyTools.Controllers
 
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index"); 
         }
 
         public IActionResult ClearTable()
@@ -102,9 +103,47 @@ namespace FireSafetyTools.Controllers
             return View("Index", designFireViewModel);
         }
 
+        [HttpDelete]
         public IActionResult DeletePhase(int id)
         {
-            return View("Index");
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            designFireViewModel.DeletePhase(id);
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult GetChartData()
+        {
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                var designFireViewModel = new DesignFireViewModel();
+                designFireViewModel.Initiate();
+
+                HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+            }
+
+            var viewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            var chartDataDto = new ChartDataDto()
+            {
+                XAxis = viewModel.XAxis,
+                YAxis = viewModel.YAxis
+            };
+
+            return Json(chartDataDto);
         }
     }
 }

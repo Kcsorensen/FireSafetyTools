@@ -23,18 +23,18 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.GrowthKnownDurationAndGrowthRate }, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndTargetEffect).Name, "New", "DesignFire", new { id = PhaseType.GrowthKnownDurationAndTargetEffect }, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.GrowthKnownTargetEffectAndGrowthRate }, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.GrowthKnownDurationAndGrowthRate}, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndTargetEffect).Name, "New", "DesignFire", new {id = PhaseType.GrowthKnownDurationAndTargetEffect}, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.GrowthKnownTargetEffectAndGrowthRate}, null)</li>
                             <li role="separator" class="divider"></li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.SteadyKnownDuration).Name, "New", "DesignFire", new { id = PhaseType.SteadyKnownDuration }, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.SteadyKnownDuration).Name, "New", "DesignFire", new {id = PhaseType.SteadyKnownDuration}, null)</li>
                             <li role="separator" class="divider"></li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownDurationAndGrowthRate }, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndTargetEffect).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownDurationAndTargetEffect }, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new { id = PhaseType.DecayKnownTargetEffectAndGrowthRate }, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.DecayKnownDurationAndGrowthRate}, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndTargetEffect).Name, "New", "DesignFire", new {id = PhaseType.DecayKnownDurationAndTargetEffect}, null)</li>
+                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.DecayKnownTargetEffectAndGrowthRate}, null)</li>
                         </ul>
                     </div>
-                    @Html.ActionLink("Clear", "ClearTable", "DesignFire", null, new { @class = "btn btn-sm btn-warning btn-create", style = "position: relative; z-index: 1" })
+                    @Html.ActionLink("Clear All", "ClearTable", "DesignFire", null, new { @class = "btn btn-sm btn-warning btn-create", style = "position: relative; z-index: 1" })
                 </div>
             </div>
         </div>
@@ -93,11 +93,7 @@
 </div>
 
 <div class="inline" style="position: relative;">
-
-    <div id="xaxis" class="hidden" data-chart="@Model.XAxis"></div>
-    <div id="yaxis" class="hidden" data-chart="@Model.YAxis"></div>
     
-    @Html.ActionLink("Clear", "ClearTable", "DesignFire", null, new { @class = "btn btn-warning" })
     <button class="btn btn-danger" type="button" style="display: inline">Export</button>
 
 </div>
@@ -162,23 +158,12 @@
 
 @section scripts {
     <script src="~/lib/plotly.js-1.21.2/dist/plotly.min.js"></script>
+    <script src="~/lib/bootbox.js/bootbox.js"></script>
     <script>
 
-        $(document) .ready(function() {
+        $(document).ready(function() {
 
-            var xAxisData = JSON.parse($("#xaxis").attr("data-chart"));
-            var yAxisData = JSON.parse($("#yaxis").attr("data-chart"));
-
-
-            var line = {
-                x: xAxisData,
-                y: yAxisData,
-                fill: 'tozeroy',
-                type: 'line'
-            };
-
-            var data = [line];
-
+            // Plot Layout
             var layout = {
                 title: "Design Fire",
                 xaxis: {
@@ -189,50 +174,58 @@
                 }
             };
 
-            Plotly.newPlot('myDiv', data, layout);
+            // Function to update plot
+            var updatePlot = function ()
+            {
+                $.ajax({
+                    url: "@Url.Action("GetChartData","DesignFire")",
+                    method: "GET",
+                    success: function(chartData) {
+                
+                    var xAxisData = JSON.parse(chartData.xAxis);
+                    var yAxisData = JSON.parse(chartData.yAxis);
 
-            //var table = document.getElementById("phaseTable");
+                    var line = {
+                        x: xAxisData,
+                        y: yAxisData,
+                        fill: 'tozeroy',
+                        type: 'line'
+                    };
 
-            //table.onclick("js-delete", function() {
-            //    confirm(test);
-            //    });
+                    var data = [line];
 
+                    Plotly.newPlot('myDiv', data, layout);
+                    }
+                });
+            }
 
+            updatePlot();
+
+            // Function for deleting a Phase in the table
             $("#phaseTable").on("click", ".js-delete", function() {
                 var button = $(this);
 
-                var test = button.parent("td").id("phaseid");
-                confirm(test);
-            });
+                bootbox.confirm("Are you sure you want to delete this phase?", function(result) {
+                    if (result) {
 
+                        var phaseid = button.parents("tr").children().first().text();
+
+                        $.ajax({
+                            url: "@Url.Action("DeletePhase", "DesignFire")",
+                            data: { "id": phaseid },
+                            method: "DELETE",
+                            success: function() {
+                            button.parents("tr").remove();
+
+                            updatePlot();
+
+                            }
+                        });
+                    }
+                });
+            });
         });
 
-        //var table = document.getElementById("phaseTable");
-
-        //table.onclick("js-delete", function() {
-        //    confirm(test);
-        //    });
-
-        //$("#phaseTable").on("click", "js-delete", function() {
-        //    var button = $(this);
-
-        //    var test = button.parent("td").id("phaseid");
-        //    confirm(test);
-
-        @*bootbox.confirm("Are you sure you want to delete this phase", function(result) {
-            if (result) {
-
-
-                    $.ajax({
-                        url: "@Url.Action("DeletePhase", "DesignFire")",
-                        data: { "id": button.parent("td") },
-                        method: "DELETE",
-                        
-                    });
-                }
-            });*@
-
-
     </script>
-    }
+}
 

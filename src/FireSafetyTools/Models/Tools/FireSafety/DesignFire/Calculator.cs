@@ -31,92 +31,108 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             updatedPhase.Name = state.Name;
             updatedPhase.InitialXt = state.LatestXt;
             updatedPhase.InitialYq = state.LatestYq;
+            updatedPhase.PhaseTypeId = state.PhaseTypeId;
             updatedPhase.PhaseDataPoints = new List<DataPoint>();
 
+
             #region Growth Phase
-            if (state.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
+
+            if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
-                updatedPhase.TargetYq = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow(updatedPhase.Duration, 2);
+                updatedPhase.TargetYq = updatedPhase.InitialYq +
+                                        updatedPhase.GrowthRateFactor*Math.Pow(updatedPhase.Duration, 2);
 
-                var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
+                var stepsize = updatedPhase.Duration/(_stepsGrowthPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
+                    var newEffect =
+                        Math.Round(
+                        (updatedPhase.InitialYq +
+                         updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                       Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                Math.Pow(updatedPhase.Duration, 3) +
+                                                                updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (state.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect)
+            if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
 
-                updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.TargetYq - updatedPhase.InitialYq) /
-                                                Math.Pow(updatedPhase.Duration, 2), 4);
+                updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.TargetYq - updatedPhase.InitialYq)/
+                                                           Math.Pow(updatedPhase.Duration, 2), 4);
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
+                var stepsize = updatedPhase.Duration/(_stepsGrowthPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
+                    var newEffect =
+                        Math.Round(
+                        (updatedPhase.InitialYq +
+                         updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                       Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                Math.Pow(updatedPhase.Duration, 3) +
+                                                                updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (state.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
             {
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
-                updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.TargetYq - updatedPhase.InitialYq) / updatedPhase.GrowthRateFactor)), 1);
+                updatedPhase.Duration =
+                    Math.Round(
+                        (Math.Sqrt((updatedPhase.TargetYq - updatedPhase.InitialYq)/updatedPhase.GrowthRateFactor)), 1);
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
+                var stepsize = updatedPhase.Duration/(_stepsGrowthPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
+                    var newEffect =
+                        Math.Round(
+                        (updatedPhase.InitialYq +
+                         updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                       Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                Math.Pow(updatedPhase.Duration, 3) +
+                                                                updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
             }
+
             #endregion
 
             #region Steady Phase
 
-            if (state.PhaseTypeId == PhaseType.SteadyKnownDuration)
+            if (updatedPhase.PhaseTypeId == PhaseType.SteadyKnownDuration)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
 
@@ -124,115 +140,121 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
                 updatedPhase.TargetYq = updatedPhase.InitialYq;
 
-                var stepsize = updatedPhase.Duration / (_stepsSteadyPhase);
+                var stepsize = updatedPhase.Duration/(_stepsSteadyPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsSteadyPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
-                    var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
+                    var newEffect =
+                        Math.Round(
+                        (updatedPhase.InitialYq +
+                         updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round(((updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round(((updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
             }
 
             #endregion
 
             #region Decay Phase
 
-            if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
-                updatedPhase.TargetYq = updatedPhase.InitialYq - updatedPhase.GrowthRateFactor * Math.Pow(updatedPhase.Duration, 2);
+                updatedPhase.TargetYq = updatedPhase.InitialYq -
+                                        updatedPhase.GrowthRateFactor*Math.Pow(updatedPhase.Duration, 2);
 
-                var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
                     var newEffect =
                         Math.Round((updatedPhase.InitialYq -
-                        updatedPhase.GrowthRateFactor *
-                        (Math.Pow(updatedPhase.Duration, 2) -
-                        Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
+                                    updatedPhase.GrowthRateFactor*
+                                    (Math.Pow(updatedPhase.Duration, 2) -
+                                     Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                       Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                Math.Pow(updatedPhase.Duration, 3) +
+                                                                updatedPhase.TargetYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
+            if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
 
-                updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.InitialYq - updatedPhase.TargetYq) /
+                updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.InitialYq - updatedPhase.TargetYq)/
                                                            Math.Pow(updatedPhase.Duration, 2), 4);
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
                     var newEffect =
                         Math.Round((updatedPhase.InitialYq -
-                                    updatedPhase.GrowthRateFactor *
+                                    updatedPhase.GrowthRateFactor*
                                     (Math.Pow(updatedPhase.Duration, 2) -
                                      Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                       Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                Math.Pow(updatedPhase.Duration, 3) +
+                                                                updatedPhase.TargetYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (state.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
             {
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
-                updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq) / updatedPhase.GrowthRateFactor)), 1);
+                updatedPhase.Duration =
+                    Math.Round(
+                        (Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq)/updatedPhase.GrowthRateFactor)), 1);
                 updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                 // Generate Datapoints for chart
                 for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                 {
-                    var newTime = updatedPhase.InitialXt + stepsize * i;
+                    var newTime = updatedPhase.InitialXt + stepsize*i;
                     var newEffect =
                         Math.Round((updatedPhase.InitialYq -
-                                    updatedPhase.GrowthRateFactor *
+                                    updatedPhase.GrowthRateFactor*
                                     (Math.Pow(updatedPhase.Duration, 2) -
                                      Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
-                    var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                    var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                     updatedPhase.PhaseDataPoints.Add(newDataPoint);
                 }
 
-                updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                       Math.Pow(updatedPhase.Duration, 3) +
-                       updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
+                updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                Math.Pow(updatedPhase.Duration, 3) +
+                                                                updatedPhase.TargetYq*updatedPhase.Duration)/1000.0), 2);
             }
 
             #endregion
@@ -253,89 +275,107 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             await Task.Run((() =>
             {
                 #region Growth Phase
-                if (state.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
+
+                if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
-                    updatedPhase.TargetYq = updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow(updatedPhase.Duration, 2);
+                    updatedPhase.TargetYq = updatedPhase.InitialYq +
+                                            updatedPhase.GrowthRateFactor*Math.Pow(updatedPhase.Duration, 2);
 
-                    var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsGrowthPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
-                        var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
+                        var newEffect =
+                            Math.Round(
+                            (updatedPhase.InitialYq +
+                             updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                           Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                    Math.Pow(updatedPhase.Duration, 3) +
+                                                                    updatedPhase.InitialYq*updatedPhase.Duration)/1000.0),
+                        2);
                 }
 
-                if (state.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect)
+                if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
 
-                    updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.TargetYq - updatedPhase.InitialYq) /
-                                                    Math.Pow(updatedPhase.Duration, 2), 4);
+                    updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.TargetYq - updatedPhase.InitialYq)/
+                                                               Math.Pow(updatedPhase.Duration, 2), 4);
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                    var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsGrowthPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
-                        var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
+                        var newEffect =
+                            Math.Round(
+                            (updatedPhase.InitialYq +
+                             updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                           Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                    Math.Pow(updatedPhase.Duration, 3) +
+                                                                    updatedPhase.InitialYq*updatedPhase.Duration)/1000.0),
+                        2);
                 }
 
-                if (state.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
                 {
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
-                    updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.TargetYq - updatedPhase.InitialYq) / updatedPhase.GrowthRateFactor)), 1);
+                    updatedPhase.Duration =
+                        Math.Round(
+                            (Math.Sqrt((updatedPhase.TargetYq - updatedPhase.InitialYq)/updatedPhase.GrowthRateFactor)),
+                            1);
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                    var stepsize = updatedPhase.Duration / (_stepsGrowthPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsGrowthPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsGrowthPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
-                        var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
+                        var newEffect =
+                            Math.Round(
+                            (updatedPhase.InitialYq +
+                             updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                           Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                    Math.Pow(updatedPhase.Duration, 3) +
+                                                                    updatedPhase.InitialYq*updatedPhase.Duration)/1000.0),
+                        2);
                 }
+
                 #endregion
 
                 #region Steady Phase
 
-                if (state.PhaseTypeId == PhaseType.SteadyKnownDuration)
+                if (updatedPhase.PhaseTypeId == PhaseType.SteadyKnownDuration)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
 
@@ -343,124 +383,168 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
                     updatedPhase.TargetYq = updatedPhase.InitialYq;
 
-                    var stepsize = updatedPhase.Duration / (_stepsSteadyPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsSteadyPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsSteadyPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
-                        var newEffect = Math.Round((updatedPhase.InitialYq + updatedPhase.GrowthRateFactor * Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
+                        var newEffect =
+                            Math.Round(
+                            (updatedPhase.InitialYq +
+                             updatedPhase.GrowthRateFactor*Math.Pow((newTime - updatedPhase.InitialXt), 2)), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round(((updatedPhase.InitialYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased =
+                        Math.Round(((updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
                 }
 
                 #endregion
 
                 #region Decay Phase
 
-                if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
-                    updatedPhase.TargetYq = updatedPhase.InitialYq - updatedPhase.GrowthRateFactor * Math.Pow(updatedPhase.Duration, 2);
+                    updatedPhase.TargetYq = updatedPhase.InitialYq -
+                                            updatedPhase.GrowthRateFactor*Math.Pow(updatedPhase.Duration, 2);
 
-                    var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
                         var newEffect =
                             Math.Round((updatedPhase.InitialYq -
-                            updatedPhase.GrowthRateFactor *
-                            (Math.Pow(updatedPhase.Duration, 2) -
-                            Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
+                                        updatedPhase.GrowthRateFactor*
+                                        (Math.Pow(updatedPhase.Duration, 2) -
+                                         Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                           Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                    Math.Pow(updatedPhase.Duration, 3) +
+                                                                    updatedPhase.TargetYq*updatedPhase.Duration)/1000.0),
+                        2);
                 }
 
-                if (state.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
+                if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
 
-                    updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.InitialYq - updatedPhase.TargetYq) /
+                    updatedPhase.GrowthRateFactor = Math.Round((updatedPhase.InitialYq - updatedPhase.TargetYq)/
                                                                Math.Pow(updatedPhase.Duration, 2), 4);
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                    var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
                         var newEffect =
                             Math.Round((updatedPhase.InitialYq -
-                                        updatedPhase.GrowthRateFactor *
+                                        updatedPhase.GrowthRateFactor*
                                         (Math.Pow(updatedPhase.Duration, 2) -
                                          Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                           Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                    Math.Pow(updatedPhase.Duration, 3) +
+                                                                    updatedPhase.TargetYq*updatedPhase.Duration)/1000.0),
+                        2);
                 }
 
-                if (state.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
                 {
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
 
-                    updatedPhase.Duration = Math.Round((Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq) / updatedPhase.GrowthRateFactor)), 1);
+                    updatedPhase.Duration =
+                        Math.Round(
+                            (Math.Sqrt((updatedPhase.InitialYq - updatedPhase.TargetYq)/updatedPhase.GrowthRateFactor)),
+                            1);
                     updatedPhase.TargetXt = updatedPhase.InitialXt + updatedPhase.Duration;
 
-                    var stepsize = updatedPhase.Duration / (_stepsDecayPhase);
+                    var stepsize = updatedPhase.Duration/(_stepsDecayPhase);
 
                     // Generate Datapoints for chart
                     for (int i = 1; i < (_stepsDecayPhase + 1); i++)
                     {
-                        var newTime = updatedPhase.InitialXt + stepsize * i;
+                        var newTime = updatedPhase.InitialXt + stepsize*i;
                         var newEffect =
                             Math.Round((updatedPhase.InitialYq -
-                                        updatedPhase.GrowthRateFactor *
+                                        updatedPhase.GrowthRateFactor*
                                         (Math.Pow(updatedPhase.Duration, 2) -
                                          Math.Pow((updatedPhase.Duration - (newTime - updatedPhase.InitialXt)), 2))), 2);
 
-                        var newDataPoint = new DataPoint { Id = updatedPhase.Id, Time = newTime, Effect = newEffect };
+                        var newDataPoint = new DataPoint {Id = updatedPhase.Id, Time = newTime, Effect = newEffect};
 
                         updatedPhase.PhaseDataPoints.Add(newDataPoint);
                     }
 
-                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0 / 3.0) * updatedPhase.GrowthRateFactor *
-                           Math.Pow(updatedPhase.Duration, 3) +
-                           updatedPhase.TargetYq * updatedPhase.Duration) / 1000.0), 2);
+                    updatedPhase.TotalEnergyReleased = Math.Round((((1.0/3.0)*updatedPhase.GrowthRateFactor*
+                                                                    Math.Pow(updatedPhase.Duration, 3) +
+                                                                    updatedPhase.TargetYq*updatedPhase.Duration)/1000.0),
+                        2);
                 }
 
                 #endregion
 
             }));
 
-
-
             return updatedPhase;
+        }
+
+        public List<Phase> UpdatePhases(List<Phase> phases)
+        {
+            if (phases == null)
+            {
+                throw new NullReferenceException("input Phases cannot be null in Calculator -> UpdatePhases");
+            }
+
+            var newState = new State();
+
+            var newPhases = new List<Phase>();
+
+            foreach (var phase in phases)
+            {
+                var newPhaseFormViewModel = new PhaseFormViewModel()
+                {
+                    Duration = phase.Duration,
+                    GrowthRateFactor = phase.GrowthRateFactor,
+                    TargetYq = phase.TargetYq
+            };
+
+                newState.PhaseTypeId = phase.PhaseTypeId;
+                newState.Name = phase.Name;
+
+                var newPhase = GeneratePhase(newPhaseFormViewModel, newState);
+
+                newState.LatestXt = newPhase.TargetXt;
+                newState.LatestYq = newPhase.TargetYq;
+                newState.PhasesCount += 1;
+
+                newPhases.Add(newPhase);
+            }
+
+            return newPhases;
         }
     }
 }
