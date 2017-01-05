@@ -101,5 +101,10 @@ namespace FireSafetyTools.Controllers
 
             return View("Index", designFireViewModel);
         }
+
+        public IActionResult DeletePhase(int id)
+        {
+            return View("Index");
+        }
     }
 }
