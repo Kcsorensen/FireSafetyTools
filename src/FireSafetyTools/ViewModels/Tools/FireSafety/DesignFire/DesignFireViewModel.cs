@@ -40,45 +40,45 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             // Initially build we a growth, steady and decay phase for testing
 
-            //var calculator = new Calculator();
+            var calculator = new Calculator();
 
-            //PhaseTypeId = PhaseType.GrowthKnownDurationAndGrowthRate;
-            //UpdateState();
+            PhaseTypeId = PhaseType.GrowthKnownDurationAndGrowthRate;
+            UpdateState();
 
-            //var growthFormViewModel = new PhaseFormViewModel()
-            //{
-            //    Duration = 100,
-            //    GrowthRateFactor = 0.047
-            //};
+            var growthFormViewModel = new PhaseFormViewModel()
+            {
+                Duration = 100,
+                GrowthRateFactor = 0.047
+            };
 
-            //var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
+            var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
 
-            //AddPhase(growthPhase);
+            AddPhase(growthPhase);
 
-            //PhaseTypeId = PhaseType.SteadyKnownDuration;
-            //UpdateState();
+            PhaseTypeId = PhaseType.SteadyKnownDuration;
+            UpdateState();
 
-            //var steadyFormViewModel = new PhaseFormViewModel()
-            //{
-            //    Duration = 100,
-            //};
+            var steadyFormViewModel = new PhaseFormViewModel()
+            {
+                Duration = 100,
+            };
 
-            //var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
+            var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
 
-            //AddPhase(steadyPhase);
+            AddPhase(steadyPhase);
 
-            //PhaseTypeId = PhaseType.DecayKnownDurationAndGrowthRate;
-            //UpdateState();
+            PhaseTypeId = PhaseType.DecayKnownDurationAndGrowthRate;
+            UpdateState();
 
-            //var decayFormViewModel = new PhaseFormViewModel()
-            //{
-            //    Duration = 100,
-            //    GrowthRateFactor = 0.047
-            //};
+            var decayFormViewModel = new PhaseFormViewModel()
+            {
+                Duration = 100,
+                GrowthRateFactor = 0.047
+            };
 
-            //var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
+            var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
 
-            //AddPhase(decayPhase);
+            AddPhase(decayPhase);
 
         }
 
