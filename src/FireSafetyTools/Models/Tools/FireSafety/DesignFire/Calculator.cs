@@ -31,9 +31,8 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             updatedPhase.Name = state.Name;
             updatedPhase.InitialXt = state.LatestXt;
             updatedPhase.InitialYq = state.LatestYq;
-            updatedPhase.PhaseTypeId = state.PhaseTypeId;
+            updatedPhase.PhaseTypeId = phaseFormViewModel.PhaseTypeId;
             updatedPhase.PhaseDataPoints = new List<DataPoint>();
-
 
             #region Growth Phase
 
@@ -529,15 +528,54 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 {
                     Duration = phase.Duration,
                     GrowthRateFactor = phase.GrowthRateFactor,
-                    TargetYq = phase.TargetYq
-            };
+                    TargetYq = phase.TargetYq,
+                    PhaseTypeId = phase.PhaseTypeId
 
-                newState.PhaseTypeId = phase.PhaseTypeId;
+                };
+
+                //newState.PhaseTypeId = phase.PhaseTypeId;
                 newState.Name = phase.Name;
 
                 var newPhase = GeneratePhase(newPhaseFormViewModel, newState);
 
                 newState.LatestXt = newPhase.TargetXt;
+                newState.LatestYq = newPhase.TargetYq;
+                newState.PhasesCount += 1;
+
+                newPhases.Add(newPhase);
+            }
+
+            return newPhases;
+        }
+
+        public async Task<List<Phase>> UpdatePhasesAsync(List<Phase> phases)
+        {
+            if (phases == null)
+            {
+                throw new NullReferenceException("input Phases cannot be null in Calculator -> UpdatePhases");
+            }
+
+            var newState = new State();
+
+            var newPhases = new List<Phase>();
+
+            foreach (var phase in phases)
+            {
+                var newPhaseFormViewModel = new PhaseFormViewModel()
+                {
+                    Duration = phase.Duration,
+                    GrowthRateFactor = phase.GrowthRateFactor,
+                    TargetYq = phase.TargetYq,
+                    PhaseTypeId = phase.PhaseTypeId
+
+                };
+
+                //newState.PhaseTypeId = phase.PhaseTypeId;
+                newState.Name = phase.Name;
+
+                var newPhase = await GeneratePhaseAsync(newPhaseFormViewModel, newState);
+
+                newState.LatestXt = newPhase.TargetXt; 
                 newState.LatestYq = newPhase.TargetYq;
                 newState.PhasesCount += 1;
 

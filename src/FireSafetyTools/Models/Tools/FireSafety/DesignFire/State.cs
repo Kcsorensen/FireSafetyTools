@@ -11,6 +11,5 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
         public double LatestYq { get; set; }
         public string Name { get; set; }
         public int PhasesCount { get; set; }
-        public int PhaseTypeId { get; set; }
     }
 }

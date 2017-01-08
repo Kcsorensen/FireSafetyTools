@@ -104,7 +104,7 @@ namespace FireSafetyTools.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeletePhase(int id)
+        public async Task<IActionResult> DeletePhase(int id)
         {
             if (id == 0)
             {
@@ -118,7 +118,7 @@ namespace FireSafetyTools.Controllers
 
             var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
 
-            designFireViewModel.DeletePhase(id);
+            await designFireViewModel.DeletePhaseAsync(id);
 
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FireSafetyTools.Models.Tools.FireSafety.DesignFire;
 using Newtonsoft.Json;
 
@@ -42,38 +43,38 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             var calculator = new Calculator();
 
-            PhaseTypeId = PhaseType.GrowthKnownDurationAndGrowthRate;
-            UpdateState();
+            //UpdateState();
 
             var growthFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
-                GrowthRateFactor = 0.047
+                GrowthRateFactor = 0.047,
+                PhaseTypeId = PhaseType.GrowthKnownDurationAndGrowthRate
             };
 
             var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
 
             AddPhase(growthPhase);
 
-            PhaseTypeId = PhaseType.SteadyKnownDuration;
             UpdateState();
 
             var steadyFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
+                PhaseTypeId = PhaseType.SteadyKnownDuration
             };
 
             var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
 
             AddPhase(steadyPhase);
 
-            PhaseTypeId = PhaseType.DecayKnownDurationAndGrowthRate;
             UpdateState();
 
             var decayFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
-                GrowthRateFactor = 0.047
+                GrowthRateFactor = 0.047,
+                PhaseTypeId = PhaseType.DecayKnownDurationAndGrowthRate
             };
 
             var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
@@ -133,10 +134,9 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         {
             State.PhasesCount = Phases.Count;
             State.Name = PhaseTypes.Single(d => d.Id == PhaseTypeId).Name;
-            State.PhaseTypeId = this.PhaseTypeId;
         }
 
-        public void DeletePhase(int id)
+        public async Task DeletePhaseAsync(int id)
         {
             if (id == 0)
             {
@@ -152,7 +152,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             var calculator = new Calculator();
 
-            var updatedPhases = calculator.UpdatePhases(Phases);
+            var updatedPhases = await calculator.UpdatePhasesAsync(Phases);
 
             Phases = updatedPhases;
 
