@@ -19,5 +19,20 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         [Display(Name = "Target Effect")]
         [Range(0.0, Double.MaxValue, ErrorMessage = "This value has to be greater then zero")]
         public double TargetYq { get; set; }
+
+        public bool Edit { get; set; }
+
+        public PhaseFormViewModel()
+        {
+            
+        }
+
+        public PhaseFormViewModel(Phase phase)
+        {
+            PhaseTypeId = phase.PhaseTypeId;
+            Duration = phase.Duration;
+            GrowthRateFactor = phase.GrowthRateFactor;
+            TargetYq = phase.TargetYq;
+        }
     }
 }

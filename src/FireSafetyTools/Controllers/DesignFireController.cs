@@ -5,6 +5,7 @@ using FireSafetyTools.Models.Tools.FireSafety.DesignFire;
 using FireSafetyTools.Services;
 using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace FireSafetyTools.Controllers
 {
@@ -25,6 +26,8 @@ namespace FireSafetyTools.Controllers
             return View(viewModel);
         }
 
+
+        // id is phaseTypeId
         public IActionResult New(int id)
         {
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
@@ -39,29 +42,24 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
-            designFireViewModel.PhaseTypeId = id;
-            designFireViewModel.UpdateState();
+            //designFireViewModel.PhaseTypeId = id;
+            //designFireViewModel.UpdateState();
 
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
-            var phaseFormViewModel = new PhaseFormViewModel {PhaseTypeId = id};
+            var phaseFormViewModel = new PhaseFormViewModel {PhaseTypeId = id, Edit = false};
 
-            return View("PhaseForm", phaseFormViewModel);
+            return View("PhaseForm", phaseFormViewModel); 
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(PhaseFormViewModel phaseFormViewModel)
+        public IActionResult Save(PhaseFormViewModel phaseFormViewModel)
         {
             if (!ModelState.IsValid)
             {
                 var viewModel = new PhaseFormViewModel();
 
                 return View("PhaseForm", viewModel);
-            }
-
-            if (phaseFormViewModel == null)
-            {
-                return NotFound();
             }
 
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
@@ -71,16 +69,18 @@ namespace FireSafetyTools.Controllers
 
             var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
 
-            var phaseCalculator = new Calculator();
-
-            var updatedPhase = await phaseCalculator.GeneratePhaseAsync(phaseFormViewModel, designFireViewModel.State);
-
-            if (updatedPhase == null)
+            // If creating a new Phase
+            if (phaseFormViewModel.Edit == false)
             {
-                throw new ArgumentNullException("UpdatedPhase as a result of phaseCalculator is null. From DesignFireController -> Save");
+                designFireViewModel.AddPhase(phaseFormViewModel);
             }
 
-            designFireViewModel.AddPhase(updatedPhase);
+            // If editing a existing phase
+
+            if (phaseFormViewModel.Edit == true)
+            {
+                designFireViewModel.UpdatePhase(phaseFormViewModel);
+            }
 
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
@@ -123,6 +123,27 @@ namespace FireSafetyTools.Controllers
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult EditPhase(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            var selectedPhase = designFireViewModel.Phases.Single(x => x.Id == id);
+
+            var phaseFormViewModel = new PhaseFormViewModel(selectedPhase) {Edit = true};
+
+            return View("EditForm", phaseFormViewModel);
         }
 
         public IActionResult GetChartData()

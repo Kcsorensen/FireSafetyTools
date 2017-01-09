@@ -14,7 +14,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         public List<DataPoint> ChartDataPoints { get; set; }
         public string XAxis { get; set; }
         public string YAxis { get; set; }
-        public int PhaseTypeId { get; set; }
+        //public int PhaseTypeId { get; set; }
         public State State { get; set; }
 
         public void Initiate()
@@ -32,7 +32,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             // Initially build we a growth, steady and decay phase for testing
 
-            var calculator = new Calculator();
+            //var calculator = new Calculator();
 
             var growthFormViewModel = new PhaseFormViewModel()
             {
@@ -41,11 +41,11 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 PhaseTypeId = PhaseTypeHelper.GrowthKnownDurationAndGrowthRate
             };
 
-            var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
+            //var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
 
-            AddPhase(growthPhase);
+            AddPhase(growthFormViewModel);
 
-            UpdateState();
+            //UpdateState();
 
             var steadyFormViewModel = new PhaseFormViewModel()
             {
@@ -53,11 +53,11 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 PhaseTypeId = PhaseTypeHelper.SteadyKnownDuration
             };
 
-            var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
+            //var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
 
-            AddPhase(steadyPhase);
+            AddPhase(steadyFormViewModel);
 
-            UpdateState();
+            //UpdateState();
 
             var decayFormViewModel = new PhaseFormViewModel()
             {
@@ -66,10 +66,9 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 PhaseTypeId = PhaseTypeHelper.DecayKnownDurationAndGrowthRate
             };
 
-            var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
+            //var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
 
-            AddPhase(decayPhase);
-
+            AddPhase(decayFormViewModel);
         }
 
         private void ClearChartData()
@@ -92,13 +91,27 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             YAxis = JsonConvert.SerializeObject(yAxisArray);
         }
 
-        public void AddPhase(Phase newPhase)
+        public void AddPhase(PhaseFormViewModel phaseFormViewModel)
         {
-            State.LatestXt = newPhase.TargetXt;
-            State.LatestYq = newPhase.TargetYq;
+            if (phaseFormViewModel == null)
+            {
+                throw new NullReferenceException("The input PhaseFormViewModel in AddPhase cannot be null");
+            }
+
+            var calculator = new Calculator();
+
+            var newPhase = calculator.GeneratePhase(phaseFormViewModel, State);
+
+            if (newPhase == null)
+            {
+                throw new ArgumentNullException("newPhase as a result of calculator is null. From DesignFireViewModel -> AddPhase");
+            }
 
             Phases.Add(newPhase);
 
+            UpdateState(newPhase.TargetXt, newPhase.TargetYq);
+
+            // Generating datapoints
             this.ClearChartData();
 
             foreach (var phase in Phases)
@@ -114,14 +127,24 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
         }
 
-        private void UpdatePhases()
+        public void UpdatePhase(PhaseFormViewModel phaseFormViewModel)
         {
-            
-        }
+            if (phaseFormViewModel == null)
+            {
+                throw new NullReferenceException("The input PhaseFormViewModel in UpdatePhase cannot be null");
+            }
 
-        public void UpdateState()
-        {
-            State.PhasesCount = Phases.Count;
+            var calculator = new Calculator();
+
+            Phases.Single(x => x.Id == phaseFormViewModel.PhaseTypeId).Duration = phaseFormViewModel.Duration;
+            Phases.Single(x => x.Id == phaseFormViewModel.PhaseTypeId).GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
+            Phases.Single(x => x.Id == phaseFormViewModel.PhaseTypeId).TargetYq = phaseFormViewModel.TargetYq;
+
+            Phases = calculator.UpdatePhases(Phases);
+
+            var lastPhase = Phases.Last();
+
+            UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
         }
 
         public void DeletePhase(int id)
@@ -137,7 +160,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             Phases.Remove(selectedPhase);
 
             // Update Phases and State
-
             var calculator = new Calculator();
 
             var updatedPhases = calculator.UpdatePhases(Phases);
@@ -146,12 +168,9 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             var lastPhase = Phases.Last();
 
-            State.LatestXt = lastPhase.TargetXt;
-            State.LatestYq = lastPhase.TargetYq;
-            State.PhasesCount = Phases.Count();
+            UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
 
             // Update ChartDataPoints
-
             this.ClearChartData();
 
             foreach (var phase in Phases)
@@ -164,6 +183,13 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             XAxis = JsonConvert.SerializeObject(xAxisArray);
             YAxis = JsonConvert.SerializeObject(yAxisArray);
+        }
+
+        private void UpdateState(double targetXt, double targetYq)
+        {
+            State.LatestXt = targetXt;
+            State.LatestYq = targetYq;
+            State.PhasesCount = Phases.Count;
         }
 
         public async Task DeletePhaseAsync(int id)
@@ -182,9 +208,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             var calculator = new Calculator();
 
-            var updatedPhases = await calculator.UpdatePhasesAsync(Phases);
-
-            Phases = updatedPhases;
+            Phases = await calculator.UpdatePhasesAsync(Phases);
 
             var lastPhase = Phases.Last();
 

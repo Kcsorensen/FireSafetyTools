@@ -3,7 +3,7 @@
 @model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.PhaseFormViewModel
 
 @{
-    ViewBag.Title = "Create New Phase";
+    ViewBag.Title = "Edit Phase";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,20 +11,19 @@
                     Model.PhaseTypeId == PhaseTypeHelper.GrowthKnownDurationAndTargetEffect ||
                     Model.PhaseTypeId == PhaseTypeHelper.GrowthKnownTargetEffectAndGrowthRate)
 {
-    <h2>Create a new Growth Phase</h2>
+    <h2>Edit Growth Phase</h2>
 }
 
 @if (Model.PhaseTypeId == PhaseTypeHelper.SteadyKnownDuration)
 {
-    <h2>Create a new Steady Phase</h2>
+    <h2>Edit Steady Phase</h2>
 }
-
 
 @if (Model.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndGrowthRate ||
                     Model.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndTargetEffect ||
                     Model.PhaseTypeId == PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate)
 {
-    <h2>Create a new Decay Phase</h2>
+    <h2>Edit Decay Phase</h2>
 }
 
 @using (Html.BeginForm("Save", "DesignFire"))

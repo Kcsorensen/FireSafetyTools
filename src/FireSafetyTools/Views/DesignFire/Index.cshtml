@@ -3,7 +3,7 @@
 @model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.DesignFireViewModel
 
 @{
-    ViewBag.Title = "CreationKit";
+    ViewBag.Title = "Design Fire Creation Kit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -63,7 +63,7 @@
                             <td style="text-align: center">@phase.TargetYq kW</td>
                             <td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
                             <td style="text-align: center">
-                                <a class="btn btn-default" style="position: relative; z-index: 1"><i class="fa fa-pencil"></i></a>
+                                <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-default js-edit" style="position: relative; z-index: 1"><i class="fa fa-pencil"></i></a>
                                 <a class="btn btn-danger js-delete" style="position: relative; z-index: 1"><em class="fa fa-trash"></em></a>
                             </td>
                         </tr>
@@ -212,14 +212,10 @@
                 updatePlot();
 
                 // Function for deleting a Phase in the table
-                $("#phaseTable")
-                    .on("click",
-                        ".js-delete",
-                        function() {
+                $("#phaseTable").on("click", ".js-delete", function() {
                             var button = $(this);
 
-                            bootbox.confirm("Are you sure you want to delete this phase?",
-                                function(result) {
+                            bootbox.confirm("Are you sure you want to delete this phase?", function(result) {
                                     if (result) {
 
                                         var phaseid = button.parents("tr").children().first().text();
@@ -234,11 +230,27 @@
 
                                                 updatePlot();
 
-                                            }
-                                        });
                                     }
-                                });
-                        });
+                            });
+                        }
+                    });
+                });
+
+                $("#phaseTable").on("click", "js-edit", function() {
+                    var button = $(this);
+
+                    var phaseid = button.parents("tr").children().first().text();
+
+                    $.ajax({
+                        url: "@Url.Action("EditPhase", "DesignFire")",
+                        data: { "id": phaseid },
+                        method: "POST",
+                        success: function() {
+
+                            updatePlot();
+                        }
+                    });
+                });
             });
 
     </script>
