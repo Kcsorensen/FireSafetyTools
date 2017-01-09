@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
 
@@ -28,15 +27,15 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             var updatedPhase = new Phase();
 
             updatedPhase.Id = state.PhasesCount + 1;
-            updatedPhase.Name = state.Name;
+            updatedPhase.PhaseTypeId = phaseFormViewModel.PhaseTypeId;
+            updatedPhase.Name = PhaseTypeHelper.GetPhaseTypeName(updatedPhase.PhaseTypeId);
             updatedPhase.InitialXt = state.LatestXt;
             updatedPhase.InitialYq = state.LatestYq;
-            updatedPhase.PhaseTypeId = phaseFormViewModel.PhaseTypeId;
             updatedPhase.PhaseDataPoints = new List<DataPoint>();
 
             #region Growth Phase
 
-            if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.GrowthKnownDurationAndGrowthRate)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -66,7 +65,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                                                                 updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.GrowthKnownDurationAndTargetEffect)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
@@ -96,7 +95,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                                                                 updatedPhase.InitialYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.GrowthKnownTargetEffectAndGrowthRate)
             {
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -131,7 +130,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
             #region Steady Phase
 
-            if (updatedPhase.PhaseTypeId == PhaseType.SteadyKnownDuration)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.SteadyKnownDuration)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
 
@@ -162,7 +161,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
             #region Decay Phase
 
-            if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndGrowthRate)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -193,7 +192,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                                                                 updatedPhase.TargetYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndTargetEffect)
             {
                 updatedPhase.Duration = phaseFormViewModel.Duration;
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
@@ -224,7 +223,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                                                                 updatedPhase.TargetYq*updatedPhase.Duration)/1000.0), 2);
             }
 
-            if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+            if (updatedPhase.PhaseTypeId == PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate)
             {
                 updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                 updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -266,7 +265,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             var updatedPhase = new Phase();
 
             updatedPhase.Id = state.PhasesCount + 1;
-            updatedPhase.Name = state.Name;
+            updatedPhase.Name = PhaseTypeHelper.GetPhaseTypeName(updatedPhase.PhaseTypeId);
             updatedPhase.InitialXt = state.LatestXt;
             updatedPhase.InitialYq = state.LatestYq;
             updatedPhase.PhaseDataPoints = new List<DataPoint>();
@@ -275,7 +274,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             {
                 #region Growth Phase
 
-                if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.GrowthKnownDurationAndGrowthRate)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -306,7 +305,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         2);
                 }
 
-                if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownDurationAndTargetEffect)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.GrowthKnownDurationAndTargetEffect)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
@@ -337,7 +336,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         2);
                 }
 
-                if (updatedPhase.PhaseTypeId == PhaseType.GrowthKnownTargetEffectAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.GrowthKnownTargetEffectAndGrowthRate)
                 {
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -374,7 +373,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                 #region Steady Phase
 
-                if (updatedPhase.PhaseTypeId == PhaseType.SteadyKnownDuration)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.SteadyKnownDuration)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
 
@@ -406,7 +405,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                 #region Decay Phase
 
-                if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndGrowthRate)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -438,7 +437,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         2);
                 }
 
-                if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownDurationAndTargetEffect)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndTargetEffect)
                 {
                     updatedPhase.Duration = phaseFormViewModel.Duration;
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
@@ -470,7 +469,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                         2);
                 }
 
-                if (updatedPhase.PhaseTypeId == PhaseType.DecayKnownTargetEffectAndGrowthRate)
+                if (updatedPhase.PhaseTypeId == PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate)
                 {
                     updatedPhase.TargetYq = phaseFormViewModel.TargetYq;
                     updatedPhase.GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
@@ -534,7 +533,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 };
 
                 //newState.PhaseTypeId = phase.PhaseTypeId;
-                newState.Name = phase.Name;
+                //newState.Name = phase.Name;
 
                 var newPhase = GeneratePhase(newPhaseFormViewModel, newState);
 
@@ -559,28 +558,32 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
             var newPhases = new List<Phase>();
 
-            foreach (var phase in phases)
+            await Task.Run((() =>
             {
-                var newPhaseFormViewModel = new PhaseFormViewModel()
+                foreach (var phase in phases)
                 {
-                    Duration = phase.Duration,
-                    GrowthRateFactor = phase.GrowthRateFactor,
-                    TargetYq = phase.TargetYq,
-                    PhaseTypeId = phase.PhaseTypeId
+                    var newPhaseFormViewModel = new PhaseFormViewModel()
+                    {
+                        Duration = phase.Duration,
+                        GrowthRateFactor = phase.GrowthRateFactor,
+                        TargetYq = phase.TargetYq,
+                        PhaseTypeId = phase.PhaseTypeId
 
-                };
+                    };
 
-                //newState.PhaseTypeId = phase.PhaseTypeId;
-                newState.Name = phase.Name;
+                    var newPhase = GeneratePhase(newPhaseFormViewModel, newState);
 
-                var newPhase = await GeneratePhaseAsync(newPhaseFormViewModel, newState);
+                    newState.LatestXt = newPhase.TargetXt;
+                    newState.LatestYq = newPhase.TargetYq;
+                    newState.PhasesCount += 1;
 
-                newState.LatestXt = newPhase.TargetXt; 
-                newState.LatestYq = newPhase.TargetYq;
-                newState.PhasesCount += 1;
+                    newPhases.Add(newPhase);
+                }
 
-                newPhases.Add(newPhase);
-            }
+            }));
+
+
+
 
             return newPhases;
         }

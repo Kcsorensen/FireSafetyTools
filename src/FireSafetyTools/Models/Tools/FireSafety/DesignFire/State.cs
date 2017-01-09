@@ -9,7 +9,6 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
     {
         public double LatestXt { get; set; }
         public double LatestYq { get; set; }
-        public string Name { get; set; }
         public int PhasesCount { get; set; }
     }
 }

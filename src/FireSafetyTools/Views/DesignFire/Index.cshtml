@@ -23,15 +23,15 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.GrowthKnownDurationAndGrowthRate}, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownDurationAndTargetEffect).Name, "New", "DesignFire", new {id = PhaseType.GrowthKnownDurationAndTargetEffect}, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.GrowthKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.GrowthKnownTargetEffectAndGrowthRate}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.GrowthKnownDurationAndGrowthRate), "New", "DesignFire", new {id = PhaseTypeHelper.GrowthKnownDurationAndGrowthRate}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.GrowthKnownDurationAndTargetEffect), "New", "DesignFire", new {id = PhaseTypeHelper.GrowthKnownDurationAndTargetEffect}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.GrowthKnownTargetEffectAndGrowthRate), "New", "DesignFire", new {id = PhaseTypeHelper.GrowthKnownTargetEffectAndGrowthRate}, null)</li>
                             <li role="separator" class="divider"></li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.SteadyKnownDuration).Name, "New", "DesignFire", new {id = PhaseType.SteadyKnownDuration}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.SteadyKnownDuration), "New", "DesignFire", new {id = PhaseTypeHelper.SteadyKnownDuration}, null)</li>
                             <li role="separator" class="divider"></li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.DecayKnownDurationAndGrowthRate}, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownDurationAndTargetEffect).Name, "New", "DesignFire", new {id = PhaseType.DecayKnownDurationAndTargetEffect}, null)</li>
-                            <li>@Html.ActionLink(Model.PhaseTypes.Single(d => d.Id == PhaseType.DecayKnownTargetEffectAndGrowthRate).Name, "New", "DesignFire", new {id = PhaseType.DecayKnownTargetEffectAndGrowthRate}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.DecayKnownDurationAndGrowthRate), "New", "DesignFire", new {id = PhaseTypeHelper.DecayKnownDurationAndGrowthRate}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.DecayKnownDurationAndTargetEffect), "New", "DesignFire", new {id = PhaseTypeHelper.DecayKnownDurationAndTargetEffect}, null)</li>
+                            <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate), "New", "DesignFire", new {id = PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate}, null)</li>
                         </ul>
                     </div>
                     @Html.ActionLink("Clear All", "ClearTable", "DesignFire", null, new { @class = "btn btn-sm btn-warning btn-create", style = "position: relative; z-index: 1" })

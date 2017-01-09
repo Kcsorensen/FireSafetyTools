@@ -23,16 +23,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             Phases = new List<Phase>();
 
-            PhaseTypes = new List<PhaseType>
-            {
-                new PhaseType {Id = 0, Name = "Growth (duration, growth rate)"},
-                new PhaseType {Id = 1, Name = "Growth (duration, target effect)"},
-                new PhaseType {Id = 2, Name = "Growth (target effect, growth rate)"},
-                new PhaseType {Id = 3, Name = "Steady (duration)"},
-                new PhaseType {Id = 4, Name = "Decay (duration, growth rate)"},
-                new PhaseType {Id = 5, Name = "Decay (duration, target effect)"},
-                new PhaseType {Id = 6, Name = "Decay (target effect, growth rate)"},
-            };
+            PhaseTypes = PhaseTypeHelper.ListOfPhaseTypes;
 
             ChartDataPoints = new List<DataPoint>
             {
@@ -43,13 +34,11 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             var calculator = new Calculator();
 
-            //UpdateState();
-
             var growthFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
                 GrowthRateFactor = 0.047,
-                PhaseTypeId = PhaseType.GrowthKnownDurationAndGrowthRate
+                PhaseTypeId = PhaseTypeHelper.GrowthKnownDurationAndGrowthRate
             };
 
             var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
@@ -61,7 +50,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             var steadyFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
-                PhaseTypeId = PhaseType.SteadyKnownDuration
+                PhaseTypeId = PhaseTypeHelper.SteadyKnownDuration
             };
 
             var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
@@ -74,7 +63,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             {
                 Duration = 100,
                 GrowthRateFactor = 0.047,
-                PhaseTypeId = PhaseType.DecayKnownDurationAndGrowthRate
+                PhaseTypeId = PhaseTypeHelper.DecayKnownDurationAndGrowthRate
             };
 
             var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
@@ -133,7 +122,48 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         public void UpdateState()
         {
             State.PhasesCount = Phases.Count;
-            State.Name = PhaseTypes.Single(d => d.Id == PhaseTypeId).Name;
+        }
+
+        public void DeletePhase(int id)
+        {
+            if (id == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot delete phase with id = 0");
+            }
+
+            // Remove Phase in Phases
+            var selectedPhase = Phases.Single(x => x.Id == id);
+
+            Phases.Remove(selectedPhase);
+
+            // Update Phases and State
+
+            var calculator = new Calculator();
+
+            var updatedPhases = calculator.UpdatePhases(Phases);
+
+            Phases = updatedPhases;
+
+            var lastPhase = Phases.Last();
+
+            State.LatestXt = lastPhase.TargetXt;
+            State.LatestYq = lastPhase.TargetYq;
+            State.PhasesCount = Phases.Count();
+
+            // Update ChartDataPoints
+
+            this.ClearChartData();
+
+            foreach (var phase in Phases)
+            {
+                ChartDataPoints.AddRange(phase.GetDataPoints());
+            }
+
+            var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
+            var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
+
+            XAxis = JsonConvert.SerializeObject(xAxisArray);
+            YAxis = JsonConvert.SerializeObject(yAxisArray);
         }
 
         public async Task DeletePhaseAsync(int id)
