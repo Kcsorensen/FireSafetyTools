@@ -3,7 +3,7 @@
 @model FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire.PhaseFormViewModel
 
 @{
-    ViewBag.Title = "Edit Phase";
+    ViewBag.Title = "IsEditing Phase";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,19 +11,19 @@
                     Model.PhaseTypeId == PhaseTypeHelper.GrowthKnownDurationAndTargetEffect ||
                     Model.PhaseTypeId == PhaseTypeHelper.GrowthKnownTargetEffectAndGrowthRate)
 {
-    <h2>Edit Growth Phase</h2>
+    <h2>IsEditing Growth Phase</h2>
 }
 
 @if (Model.PhaseTypeId == PhaseTypeHelper.SteadyKnownDuration)
 {
-    <h2>Edit Steady Phase</h2>
+    <h2>IsEditing Steady Phase</h2>
 }
 
 @if (Model.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndGrowthRate ||
                     Model.PhaseTypeId == PhaseTypeHelper.DecayKnownDurationAndTargetEffect ||
                     Model.PhaseTypeId == PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate)
 {
-    <h2>Edit Decay Phase</h2>
+    <h2>IsEditing Decay Phase</h2>
 }
 
 @using (Html.BeginForm("Save", "DesignFire"))
@@ -65,6 +65,7 @@
         }
     </div>
 
+    @Html.TextBoxFor(d => d.PhaseId, Model.PhaseId.ToString(), new { @class = "hidden"})
     <button type="submit" class="btn btn-danger">Save Phase</button>
 
 }

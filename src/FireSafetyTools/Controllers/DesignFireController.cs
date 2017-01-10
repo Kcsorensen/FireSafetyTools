@@ -47,7 +47,7 @@ namespace FireSafetyTools.Controllers
 
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
-            var phaseFormViewModel = new PhaseFormViewModel {PhaseTypeId = id, Edit = false};
+            var phaseFormViewModel = new PhaseFormViewModel {PhaseTypeId = id};
 
             return View("PhaseForm", phaseFormViewModel); 
         }
@@ -70,14 +70,14 @@ namespace FireSafetyTools.Controllers
             var designFireViewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
 
             // If creating a new Phase
-            if (phaseFormViewModel.Edit == false)
+            if (phaseFormViewModel.PhaseId == 0)
             {
                 designFireViewModel.AddPhase(phaseFormViewModel);
             }
 
             // If editing a existing phase
 
-            if (phaseFormViewModel.Edit == true)
+            if (phaseFormViewModel.PhaseId > 0)
             {
                 designFireViewModel.UpdatePhase(phaseFormViewModel);
             }
@@ -141,7 +141,7 @@ namespace FireSafetyTools.Controllers
 
             var selectedPhase = designFireViewModel.Phases.Single(x => x.Id == id);
 
-            var phaseFormViewModel = new PhaseFormViewModel(selectedPhase) {Edit = true};
+            var phaseFormViewModel = new PhaseFormViewModel(selectedPhase) { PhaseId = id };
 
             return View("EditForm", phaseFormViewModel);
         }

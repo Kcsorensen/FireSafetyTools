@@ -18,7 +18,7 @@
                 </div>
                 <div class="col col-xs-6 text-right">
                     <div class="dropdown" style="display: inline;" id="PhaseTypeId" Name="PhaseTypeIdId">
-                        <button id="dropDownMenu" class="btn btn-sm btn-primary dropdown-toggle" style="position: relative; z-index: 1" type="button" data-toggle="dropdown">
+                        <button id="dropDownMenu" class="btn btn-primary dropdown-toggle" style="position: relative; z-index: 1" type="button" data-toggle="dropdown">
                             Add a Phase
                             <span class="caret"></span>
                         </button>
@@ -34,7 +34,7 @@
                             <li>@Html.ActionLink(PhaseTypeHelper.GetPhaseTypeName(PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate), "New", "DesignFire", new {id = PhaseTypeHelper.DecayKnownTargetEffectAndGrowthRate}, null)</li>
                         </ul>
                     </div>
-                    @Html.ActionLink("Clear All", "ClearTable", "DesignFire", null, new { @class = "btn btn-sm btn-warning btn-create", style = "position: relative; z-index: 1" })
+                    @Html.ActionLink("Clear All", "ClearTable", "DesignFire", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1" })
                 </div>
             </div>
         </div>
@@ -63,8 +63,8 @@
                             <td style="text-align: center">@phase.TargetYq kW</td>
                             <td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
                             <td style="text-align: center">
-                                <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-default js-edit" style="position: relative; z-index: 1"><i class="fa fa-pencil"></i></a>
-                                <a class="btn btn-danger js-delete" style="position: relative; z-index: 1"><em class="fa fa-trash"></em></a>
+                                <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default js-edit" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>
                             </td>
                         </tr>
                     }

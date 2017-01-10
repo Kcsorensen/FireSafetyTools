@@ -6,6 +6,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 {
     public class PhaseFormViewModel
     {
+        public int PhaseId { get; set; }
         public int PhaseTypeId { get; set; }
 
         [Display(Name = "Time Duration")]
@@ -20,7 +21,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         [Range(0.0, Double.MaxValue, ErrorMessage = "This value has to be greater then zero")]
         public double TargetYq { get; set; }
 
-        public bool Edit { get; set; }
+        //public bool IsEditing { get; set; }
 
         public PhaseFormViewModel()
         {

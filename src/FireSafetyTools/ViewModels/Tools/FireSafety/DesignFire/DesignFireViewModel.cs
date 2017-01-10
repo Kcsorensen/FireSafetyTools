@@ -14,7 +14,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         public List<DataPoint> ChartDataPoints { get; set; }
         public string XAxis { get; set; }
         public string YAxis { get; set; }
-        //public int PhaseTypeId { get; set; }
         public State State { get; set; }
 
         public void Initiate()
@@ -32,8 +31,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             // Initially build we a growth, steady and decay phase for testing
 
-            //var calculator = new Calculator();
-
             var growthFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
@@ -41,11 +38,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 PhaseTypeId = PhaseTypeHelper.GrowthKnownDurationAndGrowthRate
             };
 
-            //var growthPhase = calculator.GeneratePhase(growthFormViewModel, State);
-
             AddPhase(growthFormViewModel);
-
-            //UpdateState();
 
             var steadyFormViewModel = new PhaseFormViewModel()
             {
@@ -53,11 +46,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 PhaseTypeId = PhaseTypeHelper.SteadyKnownDuration
             };
 
-            //var steadyPhase = calculator.GeneratePhase(steadyFormViewModel, State);
-
             AddPhase(steadyFormViewModel);
-
-            //UpdateState();
 
             var decayFormViewModel = new PhaseFormViewModel()
             {
@@ -66,15 +55,24 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 PhaseTypeId = PhaseTypeHelper.DecayKnownDurationAndGrowthRate
             };
 
-            //var decayPhase = calculator.GeneratePhase(decayFormViewModel, State);
-
             AddPhase(decayFormViewModel);
         }
 
-        private void ClearChartData()
+        private void UpdateChartData()
         {
             ChartDataPoints.Clear();
             ChartDataPoints.Add(new DataPoint { Id = 0, Time = 0.0, Effect = 0.0 });
+
+            foreach (var phase in Phases)
+            {
+                ChartDataPoints.AddRange(phase.GetDataPoints());
+            }
+
+            var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
+            var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
+
+            XAxis = JsonConvert.SerializeObject(xAxisArray);
+            YAxis = JsonConvert.SerializeObject(yAxisArray);
         }
 
         public void ClearPhases()
@@ -111,20 +109,8 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             UpdateState(newPhase.TargetXt, newPhase.TargetYq);
 
-            // Generating datapoints
-            this.ClearChartData();
-
-            foreach (var phase in Phases)
-            {
-                ChartDataPoints.AddRange(phase.GetDataPoints());
-            }
-
-            var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
-            var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
-
-            XAxis = JsonConvert.SerializeObject(xAxisArray);
-            YAxis = JsonConvert.SerializeObject(yAxisArray);
-
+            // Update ChartDataPoints
+            UpdateChartData();
         }
 
         public void UpdatePhase(PhaseFormViewModel phaseFormViewModel)
@@ -134,17 +120,21 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 throw new NullReferenceException("The input PhaseFormViewModel in UpdatePhase cannot be null");
             }
 
+            // Update Phases
             var calculator = new Calculator();
 
-            Phases.Single(x => x.Id == phaseFormViewModel.PhaseTypeId).Duration = phaseFormViewModel.Duration;
-            Phases.Single(x => x.Id == phaseFormViewModel.PhaseTypeId).GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
-            Phases.Single(x => x.Id == phaseFormViewModel.PhaseTypeId).TargetYq = phaseFormViewModel.TargetYq;
+            Phases.Single(x => x.Id == phaseFormViewModel.PhaseId).Duration = phaseFormViewModel.Duration;
+            Phases.Single(x => x.Id == phaseFormViewModel.PhaseId).GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
+            Phases.Single(x => x.Id == phaseFormViewModel.PhaseId).TargetYq = phaseFormViewModel.TargetYq;
 
             Phases = calculator.UpdatePhases(Phases);
 
             var lastPhase = Phases.Last();
 
             UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
+
+            // Update ChartDataPoints
+            UpdateChartData();
         }
 
         public void DeletePhase(int id)
@@ -154,12 +144,12 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
                 throw new ArgumentOutOfRangeException("Cannot delete phase with id = 0");
             }
 
-            // Remove Phase in Phases
+            // Remove selectedPhase in Phases
             var selectedPhase = Phases.Single(x => x.Id == id);
 
             Phases.Remove(selectedPhase);
 
-            // Update Phases and State
+            // Update Phases
             var calculator = new Calculator();
 
             var updatedPhases = calculator.UpdatePhases(Phases);
@@ -171,18 +161,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
 
             // Update ChartDataPoints
-            this.ClearChartData();
-
-            foreach (var phase in Phases)
-            {
-                ChartDataPoints.AddRange(phase.GetDataPoints());
-            }
-
-            var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
-            var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
-
-            XAxis = JsonConvert.SerializeObject(xAxisArray);
-            YAxis = JsonConvert.SerializeObject(yAxisArray);
+            UpdateChartData();
         }
 
         private void UpdateState(double targetXt, double targetYq)
@@ -205,7 +184,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             Phases.Remove(selectedPhase);
 
             // Update Phases and State
-
             var calculator = new Calculator();
 
             Phases = await calculator.UpdatePhasesAsync(Phases);
@@ -214,22 +192,10 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             State.LatestXt = lastPhase.TargetXt;
             State.LatestYq = lastPhase.TargetYq;
-            State.PhasesCount = Phases.Count(); 
+            State.PhasesCount = Phases.Count();
 
             // Update ChartDataPoints
-
-            this.ClearChartData();
-
-            foreach (var phase in Phases)
-            {
-                ChartDataPoints.AddRange(phase.GetDataPoints());
-            }
-
-            var xAxisArray = ChartDataPoints.Select(x => x.Time).ToArray();
-            var yAxisArray = ChartDataPoints.Select(x => x.Effect).ToArray();
-
-            XAxis = JsonConvert.SerializeObject(xAxisArray);
-            YAxis = JsonConvert.SerializeObject(yAxisArray);
+            UpdateChartData();
         }
     }
 }
