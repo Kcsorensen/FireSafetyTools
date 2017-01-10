@@ -13,10 +13,10 @@
     <div class="panel panel-default panel-table">
         <div class="panel-heading">
             <div class="row">
-                <div class="col col-xs-6">
+                <div class="col col-xs-5">
                     <h3 class="panel-title">List of Phases</h3>
                 </div>
-                <div class="col col-xs-6 text-right">
+                <div class="col col-xs-7 text-right">
                     <div class="dropdown" style="display: inline;" id="PhaseTypeId" Name="PhaseTypeIdId">
                         <button id="dropDownMenu" class="btn btn-primary dropdown-toggle" style="position: relative; z-index: 1" type="button" data-toggle="dropdown">
                             Add a Phase
@@ -42,7 +42,7 @@
             <table id="phaseTable" class="table table-striped table-bordered table-list">
                 <thead>
                     <tr>
-                        <th style="text-align: center">#</th>
+                        <th style="text-align: center; width: 50px ">#</th>
                         <th style="text-align: left">Phase</th>
                         <th class="hidden-sm hidden-xs" style="text-align: center">Duration</th>
                         <th class="hidden-sm hidden-xs" style="text-align: center">Growth Rate</th>
@@ -181,6 +181,13 @@
                     },
                     yaxis: {
                         title: "Effect [kW]"
+                    },
+                    margin: {
+                        l: 60,
+                        r: 60,
+                        b: 100,
+                        t: 100,
+                        pad: 4
                     }
                 };
 
@@ -231,22 +238,6 @@
 
                                     }
                             });
-                        }
-                    });
-                });
-
-                $("#phaseTable").on("click", "js-edit", function() {
-                    var button = $(this);
-
-                    var phaseid = button.parents("tr").children().first().text();
-
-                    $.ajax({
-                        url: "@Url.Action("EditPhase", "DesignFire")",
-                        data: { "id": phaseid },
-                        method: "POST",
-                        success: function() {
-
-                            updatePlot();
                         }
                     });
                 });
