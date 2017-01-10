@@ -44,9 +44,9 @@
                     <tr>
                         <th style="text-align: center">#</th>
                         <th style="text-align: left">Phase</th>
-                        <th style="text-align: center">Duration</th>
-                        <th style="text-align: center">Growth Rate</th>
-                        <th style="text-align: center">Max Effect</th>
+                        <th class="hidden-sm hidden-xs" style="text-align: center">Duration</th>
+                        <th class="hidden-sm hidden-xs" style="text-align: center">Growth Rate</th>
+                        <th class="hidden-sm hidden-xs" style="text-align: center">Max Effect</th>
                         <th style="text-align: center">Total Energy</th>
                         <th style="text-align: center"><em class="fa fa-cog"></em></th>
                     </tr>
@@ -58,9 +58,9 @@
                         <tr>
                             <td id="phaseid" style="text-align: center">@phase.Id</td>
                             <td style="text-align: left">@phase.Name</td>
-                            <td style="text-align: center">@phase.Duration s </td>
-                            <td style="text-align: center">@phase.GrowthRateFactor</td>
-                            <td style="text-align: center">@phase.TargetYq kW</td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.Duration s </td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.GrowthRateFactor</td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.TargetYq kW</td>
                             <td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
                             <td style="text-align: center">
                                 <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default js-edit" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
@@ -176,7 +176,6 @@
                 // Plot Layout
                 var layout = {
                     title: "Design Fire",
-                    //autosize: "true",
                     xaxis: {
                         title: "Time [s]"
                     },

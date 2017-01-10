@@ -30,7 +30,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             };
 
             // Initially build we a growth, steady and decay phase for testing
-
             var growthFormViewModel = new PhaseFormViewModel()
             {
                 Duration = 100,
@@ -58,6 +57,13 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             AddPhase(decayFormViewModel);
         }
 
+        private void UpdateState(double targetXt, double targetYq)
+        {
+            State.LatestXt = targetXt;
+            State.LatestYq = targetYq;
+            State.PhasesCount = Phases.Count;
+        }
+        
         private void UpdateChartData()
         {
             ChartDataPoints.Clear();
@@ -113,7 +119,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             UpdateChartData();
         }
 
-        public void UpdatePhase(PhaseFormViewModel phaseFormViewModel)
+        public async Task UpdatePhaseAsync(PhaseFormViewModel phaseFormViewModel)
         {
             if (phaseFormViewModel == null)
             {
@@ -127,7 +133,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             Phases.Single(x => x.Id == phaseFormViewModel.PhaseId).GrowthRateFactor = phaseFormViewModel.GrowthRateFactor;
             Phases.Single(x => x.Id == phaseFormViewModel.PhaseId).TargetYq = phaseFormViewModel.TargetYq;
 
-            Phases = calculator.UpdatePhases(Phases);
+            Phases = await calculator.UpdatePhasesAsync(Phases);
 
             var lastPhase = Phases.Last();
 
@@ -137,40 +143,33 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             UpdateChartData();
         }
 
-        public void DeletePhase(int id)
-        {
-            if (id == 0)
-            {
-                throw new ArgumentOutOfRangeException("Cannot delete phase with id = 0");
-            }
+        //public void DeletePhase(int id)
+        //{
+        //    if (id == 0)
+        //    {
+        //        throw new ArgumentOutOfRangeException("Cannot delete phase with id = 0");
+        //    }
 
-            // Remove selectedPhase in Phases
-            var selectedPhase = Phases.Single(x => x.Id == id);
+        //    // Remove selectedPhase in Phases
+        //    var selectedPhase = Phases.Single(x => x.Id == id);
 
-            Phases.Remove(selectedPhase);
+        //    Phases.Remove(selectedPhase);
 
-            // Update Phases
-            var calculator = new Calculator();
+        //    // Update Phases
+        //    var calculator = new Calculator();
 
-            var updatedPhases = calculator.UpdatePhases(Phases);
+        //    var updatedPhases = calculator.UpdatePhases(Phases);
 
-            Phases = updatedPhases;
+        //    Phases = updatedPhases;
 
-            var lastPhase = Phases.Last();
+        //    var lastPhase = Phases.Last();
 
-            UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
+        //    UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
 
-            // Update ChartDataPoints
-            UpdateChartData();
-        }
-
-        private void UpdateState(double targetXt, double targetYq)
-        {
-            State.LatestXt = targetXt;
-            State.LatestYq = targetYq;
-            State.PhasesCount = Phases.Count;
-        }
-
+        //    // Update ChartDataPoints
+        //    UpdateChartData();
+        //}
+        
         public async Task DeletePhaseAsync(int id)
         {
             if (id == 0)

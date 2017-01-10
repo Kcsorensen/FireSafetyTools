@@ -21,8 +21,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
         [Range(0.0, Double.MaxValue, ErrorMessage = "This value has to be greater then zero")]
         public double TargetYq { get; set; }
 
-        //public bool IsEditing { get; set; }
-
         public PhaseFormViewModel()
         {
             

@@ -25,8 +25,7 @@ namespace FireSafetyTools.Controllers
 
             return View(viewModel);
         }
-
-
+        
         // id is phaseTypeId
         public IActionResult New(int id)
         {
@@ -42,9 +41,6 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
-            //designFireViewModel.PhaseTypeId = id;
-            //designFireViewModel.UpdateState();
-
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
 
             var phaseFormViewModel = new PhaseFormViewModel {PhaseTypeId = id};
@@ -53,7 +49,7 @@ namespace FireSafetyTools.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save(PhaseFormViewModel phaseFormViewModel)
+        public async Task<IActionResult> Save(PhaseFormViewModel phaseFormViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -76,10 +72,9 @@ namespace FireSafetyTools.Controllers
             }
 
             // If editing a existing phase
-
             if (phaseFormViewModel.PhaseId > 0)
             {
-                designFireViewModel.UpdatePhase(phaseFormViewModel);
+                await designFireViewModel.UpdatePhaseAsync(phaseFormViewModel);
             }
 
             HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
