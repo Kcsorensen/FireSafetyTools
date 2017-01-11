@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FireSafetyTools.Models.Tools.FireSafety.DesignFire;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 
 namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
@@ -142,34 +143,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             // Update ChartDataPoints
             UpdateChartData();
         }
-
-        //public void DeletePhase(int id)
-        //{
-        //    if (id == 0)
-        //    {
-        //        throw new ArgumentOutOfRangeException("Cannot delete phase with id = 0");
-        //    }
-
-        //    // Remove selectedPhase in Phases
-        //    var selectedPhase = Phases.Single(x => x.Id == id);
-
-        //    Phases.Remove(selectedPhase);
-
-        //    // Update Phases
-        //    var calculator = new Calculator();
-
-        //    var updatedPhases = calculator.UpdatePhases(Phases);
-
-        //    Phases = updatedPhases;
-
-        //    var lastPhase = Phases.Last();
-
-        //    UpdateState(lastPhase.TargetXt, lastPhase.TargetYq);
-
-        //    // Update ChartDataPoints
-        //    UpdateChartData();
-        //}
-        
+       
         public async Task DeletePhaseAsync(int id)
         {
             if (id == 0)
@@ -195,6 +169,29 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             // Update ChartDataPoints
             UpdateChartData();
+        }
+
+        public string GetPyrosimExportData()
+        {
+            if (ChartDataPoints == null)
+            {
+                return "";
+            }
+
+            string stringResult = "";
+
+            var maxEffect = ChartDataPoints.Max(a => a.Effect);
+
+            foreach (var dataPoint in ChartDataPoints)
+            {
+                var time = Math.Round(dataPoint.Time, 2); 
+                var fraction = Math.Round((dataPoint.Effect / maxEffect), 2);
+
+                // Culture er med for at sikre at decimalseperator er punktum, så Pyrosim får dataen i rigtig format.
+                stringResult += string.Format(new System.Globalization.CultureInfo("en-US"), "{0}\t{1}" + Environment.NewLine, time, fraction);
+            }
+
+            return stringResult;
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FireSafetyTools.Dtos.Tools.FireSafety;
 using FireSafetyTools.Models.Tools.FireSafety.DesignFire;
@@ -160,6 +159,23 @@ namespace FireSafetyTools.Controllers
             };
 
             return Json(chartDataDto);
+        }
+
+        public IActionResult GetPyrosimExportData()
+        {
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                var designFireViewModel = new DesignFireViewModel();
+                designFireViewModel.Initiate();
+
+                HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+            }
+
+            var viewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            var resultString = viewModel.GetPyrosimExportData();
+
+            return Content(resultString); 
         }
     }
 }

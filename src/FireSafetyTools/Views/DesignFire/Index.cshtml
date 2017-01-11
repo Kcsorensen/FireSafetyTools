@@ -64,7 +64,7 @@
                             <td class="hidden-sm hidden-xs" style="text-align: center">@phase.TargetYq kW</td>
                             <td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
                             <td style="text-align: center">
-                                <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default js-edit" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>
                             </td>
                         </tr>
@@ -93,9 +93,10 @@
     </div>
 </div>
 
-<div class="inline" style="position: relative;">
+<div class="inline" style="margin-bottom: 30px">
     
-    <button class="btn btn-danger" type="button" style="display: inline">Export</button>
+    <a id="btnExport" class="btn btn-danger" style="display: inline">Export to Pyrosim</a>
+
 
 </div>
 
@@ -160,6 +161,7 @@
 @section scripts {
     <script src="~/lib/plotly.js-1.21.2/dist/plotly.min.js"></script>
     <script src="~/lib/bootbox.js/bootbox.js"></script>
+
     <script>
 
         $(document)
@@ -170,9 +172,7 @@
                 window.onresize = function() {
 
                     Plotly.Plots.resize(plot);
-
                 }
-
 
                 // Plot Layout
                 var layout = {
@@ -242,6 +242,24 @@
                         }
                     });
                 });
+
+                function testing() {
+                    clipboard.copy("Testing2323");
+                }
+
+                $("#btnExport").on("click", function() {
+                    $.ajax({
+                        url: "@Url.Action("GetPyrosimExportData","DesignFire")",
+                        method: "Get",
+                        success: function (resultString) {
+
+                            window.prompt("Copy to clipboard: Ctrl+C, Enter\n" + 
+                                "Paste it in Pyrosim, Ctrl+V, after selecting both columns", resultString);
+
+                        }
+                    });
+                });
+
             });
 
     </script>
