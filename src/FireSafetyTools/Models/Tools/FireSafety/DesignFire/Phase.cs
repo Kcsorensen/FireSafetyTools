@@ -9,6 +9,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
         public int Id { get; set; }
         public int PhaseTypeId { get; set; }
         public string Name { get; set; }
+        public string ShortName { get; set; }
 
         [Display(Name = "Time Duration")]
         [Range(0.0, Double.MaxValue, ErrorMessage = "This value has to be greater then zero")]

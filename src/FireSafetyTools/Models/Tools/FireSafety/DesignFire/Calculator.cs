@@ -29,6 +29,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             updatedPhase.Id = state.PhasesCount + 1;
             updatedPhase.PhaseTypeId = phaseFormViewModel.PhaseTypeId;
             updatedPhase.Name = PhaseTypeHelper.GetPhaseTypeName(updatedPhase.PhaseTypeId);
+            updatedPhase.ShortName = PhaseTypeHelper.GetPhaseTypeShortName(updatedPhase.PhaseTypeId);
             updatedPhase.InitialXt = state.LatestXt;
             updatedPhase.InitialYq = state.LatestYq;
             updatedPhase.PhaseDataPoints = new List<DataPoint>();

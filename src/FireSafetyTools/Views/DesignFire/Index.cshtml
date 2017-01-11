@@ -19,7 +19,7 @@
                 <div class="col col-xs-7 text-right">
                     <div class="dropdown" style="display: inline;" id="PhaseTypeId" Name="PhaseTypeIdId">
                         <button id="dropDownMenu" class="btn btn-primary dropdown-toggle" style="position: relative; z-index: 1" type="button" data-toggle="dropdown">
-                            Add a Phase
+                            Add
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
@@ -57,7 +57,8 @@
                     {
                         <tr>
                             <td id="phaseid" style="text-align: center">@phase.Id</td>
-                            <td style="text-align: left">@phase.Name</td>
+                            <td class="hidden-xs" style="text-align: left">@phase.Name</td>
+                            <td class="hidden-lg hidden-md hidden-sm" style="text-align: left">@phase.ShortName</td>
                             <td class="hidden-sm hidden-xs" style="text-align: center">@phase.Duration s </td>
                             <td class="hidden-sm hidden-xs" style="text-align: center">@phase.GrowthRateFactor</td>
                             <td class="hidden-sm hidden-xs" style="text-align: center">@phase.TargetYq kW</td>

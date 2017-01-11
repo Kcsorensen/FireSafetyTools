@@ -26,6 +26,17 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             new PhaseType {Id = 6, Name = "Decay (target effect, growth rate)"},
         };
 
+        public static readonly List<PhaseType> ListOfShortPhaseTypes = new List<PhaseType>()
+        {
+            new PhaseType {Id = 0, Name = "Growth"},
+            new PhaseType {Id = 1, Name = "Growth"},
+            new PhaseType {Id = 2, Name = "Growth"},
+            new PhaseType {Id = 3, Name = "Steady"},
+            new PhaseType {Id = 4, Name = "Decay"},
+            new PhaseType {Id = 5, Name = "Decay"},
+            new PhaseType {Id = 6, Name = "Decay"},
+        };
+
         public static string GetPhaseTypeName(int id)
         {
             if (id > 6)
@@ -34,6 +45,18 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
             }
 
             var name = ListOfPhaseTypes.Single(x => x.Id == id).Name;
+
+            return name;
+        }
+
+        public static string GetPhaseTypeShortName(int id)
+        {
+            if (id > 6)
+            {
+                throw new IndexOutOfRangeException("Id in GetPhaseTypeName cannot be larger then 6");
+            }
+
+            var name = ListOfShortPhaseTypes.Single(x => x.Id == id).Name;
 
             return name;
         }
