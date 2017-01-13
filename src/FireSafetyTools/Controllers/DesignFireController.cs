@@ -6,7 +6,6 @@ using FireSafetyTools.Services;
 using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
 
 namespace FireSafetyTools.Controllers
@@ -15,44 +14,6 @@ namespace FireSafetyTools.Controllers
     {
         public DesignFireController()
         {
-            string sFileName = @"d:\\demo.xlsx";
-            
-            FileInfo file = new FileInfo(Path.Combine(sFileName));
-
-            if (file.Exists)
-            {
-                file.Delete();
-            }
-
-            using (ExcelPackage package = new ExcelPackage(file))
-            {
-                // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee");
-                //First add the headers
-                worksheet.Cells[1, 1].Value = "ID";
-                worksheet.Cells[1, 2].Value = "Name";
-                worksheet.Cells[1, 3].Value = "Gender";
-                worksheet.Cells[1, 4].Value = "Salary (in $)";
-
-                //Add values
-                worksheet.Cells["A2"].Value = 1000;
-                worksheet.Cells["B2"].Value = "Jon";
-                worksheet.Cells["C2"].Value = "M";
-                worksheet.Cells["D2"].Value = 5000;
-
-                worksheet.Cells["A3"].Value = 1001;
-                worksheet.Cells["B3"].Value = "Graham";
-                worksheet.Cells["C3"].Value = "M";
-                worksheet.Cells["D3"].Value = 10000;
-
-                worksheet.Cells["A4"].Value = 1002;
-                worksheet.Cells["B4"].Value = "Jenny";
-                worksheet.Cells["C4"].Value = "F";
-                worksheet.Cells["D4"].Value = 5000;
-
-                package.Save(); //Save the workbook.
-
-            }
         }
 
         public IActionResult Index()
@@ -221,6 +182,25 @@ namespace FireSafetyTools.Controllers
             var resultString = viewModel.GetPyrosimExportData();
 
             return Content(resultString); 
+        }
+
+        public IActionResult ExportToExcel()
+        {
+            if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
+            {
+                var designFireViewModel = new DesignFireViewModel();
+                designFireViewModel.Initiate();
+
+                HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+            }
+
+            var viewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
+
+            var excelHelper = new ExcelHelper();
+
+            var stream = excelHelper.SaveExcelResultStream(viewModel);
+
+            return File(stream, "application/octet-stream", "ExcelDB.xlsx");
         }
     }
 }
