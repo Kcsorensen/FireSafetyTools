@@ -15,14 +15,14 @@
     
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
-                @Html.Label("GeneratePhase from")
+                @Html.Label("Convert from")
                 @Html.DropDownListFor(s => s._smokeData.ConvertFromId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
             </div>
         </li>
 
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
-                @Html.Label("GeneratePhase to")
+                @Html.Label("Convert to")
                 @Html.DropDownListFor(s => s._smokeData.ConvertToId, new SelectList(Model.SelectListItems, "Value", "Text"), null, new {@class = "form-control select"})
 
             </div>
@@ -108,7 +108,7 @@
     <div id="clearline"></div>
     
     <div>
-        <button type="submit" class="btn btn-primary">GeneratePhase</button>
+        <button type="submit" class="btn btn-primary">Convert</button>
         @Html.ActionLink("Clear", "ClearSmokeData", "OpticalSmoke", null, new { @class = "btn btn-warning" })
     </div>
 }
