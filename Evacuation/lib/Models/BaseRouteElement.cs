@@ -14,12 +14,13 @@ namespace Evacuation.lib.Models
         public double CalculatedFlow { get; set; }
         public double EffectiveWidth { get; set; }
         public double Width { get; set; }
+        public double Density { get; set; }
         public int TransitionType { get; set; }
         public double QueueBuildup { get; set; }
 
         public BaseRouteElement()
         {
-            Guid = System.Guid.NewGuid();
+            Guid = Guid.NewGuid();
             TransitionType = TransitionTypes.OneFlowInOneFlowOut;
         }
     }

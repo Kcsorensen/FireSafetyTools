@@ -29,7 +29,8 @@ namespace Evacuation
                 Name = "Corridor on 9th Floor",
                 NumberOfPeople = 150,
                 Width = 2.44,
-                Length = 45.7
+                Distance = (15.2 + 45.7) / 2,
+                Density = 150 / (45.7 * 2.44)
             };
 
             viewModel.AddRouteElementToRoute(routeName, corridor);
@@ -48,7 +49,7 @@ namespace Evacuation
                 Name = "Stairway on 9th Floor",
                 NumberOfPeople = 150,
                 Width = 1.12,
-                Length = 11.6,
+                Distance = 11.6,
             };
 
             viewModel.AddRouteElementToRoute(routeName, stairway);

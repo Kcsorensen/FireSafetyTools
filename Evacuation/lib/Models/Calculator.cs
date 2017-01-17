@@ -10,6 +10,7 @@ namespace Evacuation.lib.Models
         private readonly double _dmax = 1 / (2 * 0.266);
         private double _previousEffectiveWidth;
         private double _previousSpecificFlow;
+        private double _previousCalculatedFlow;
 
         public List<BaseRouteElement> CalculateRoute(List<BaseRouteElement> route)
         {
@@ -23,20 +24,55 @@ namespace Evacuation.lib.Models
 
             foreach (var routeElement in route)
             {
+                // Corridor
                 if (routeElement.RouteType == RouteTypes.Corridor)
                 {
                     // Cast routeElement to Corridor
                     var element = ((Corridor)routeElement);
 
-                    // Determine Density
-                    element.Density = element.NumberOfPeople / (element.Length * element.Width);
+                    // Determine Effective Width
+                    element.EffectiveWidth = element.Width - (2 * element.BoundaryLayerWidth);
 
-                    // Determine Speed
-                    element.Speed = element.KValue - _a * element.KValue * element.Density;
+                    // Check Transition Type
+                    if (element.TransitionType == TransitionTypes.FirstRouteElement)
+                    {
+                        if (element.Density < 0.001)
+                        {
+                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                        }
 
-                    // Determine Specific Flow
-                    element.SpecificFlow = element.Speed * element.Density;
-                    _previousSpecificFlow = element.SpecificFlow;
+                        // Determine Specific Flow
+                        element.SpecificFlow = (element.KValue - _a * element.KValue * element.Density) * element.Density;
+                    }
+
+                    // Check Transition Type
+                    if (element.TransitionType != TransitionTypes.FirstRouteElement)
+                    {
+                        // Determine Specific Flow
+                        element.SpecificFlow = GetSpecificFlow(element);
+
+                        // Determine Density
+                        var a = _a * element.KValue;
+                        var b = -element.KValue;
+                        var c = element.SpecificFlow;
+
+                        var roots = QuadraticEquationSolver(a, b, c);
+
+                        if (roots.Item1 <= _dmax)
+                        {
+                            element.Density = roots.Item1;
+                        }
+
+                        if (roots.Item2 <= _dmax)
+                        {
+                            element.Density = roots.Item2;
+                        }
+
+                        if (element.Density < 0.001)
+                        {
+                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                        }
+                    }
 
                     // Check if calculated specific flow exceed maximum specific flow
                     if (element.SpecificFlow > element.Fsmax)
@@ -44,16 +80,27 @@ namespace Evacuation.lib.Models
                         element.SpecificFlow = element.Fsmax;
                     }
 
-                    // Determine Effective Width
-                    element.EffectiveWidth = element.Width - (2 * element.BoundaryLayerWidth);
-                    _previousEffectiveWidth = element.EffectiveWidth;
+                    // Determine Speed
+                    element.Speed = element.KValue - _a * element.KValue * element.Density;
 
                     // Determine Calculated Flow
                     element.CalculatedFlow = element.SpecificFlow * element.EffectiveWidth;
 
+                    // Determine Travel Time
+                    element.TravelTime = element.Distance / element.Speed;
+
+                    // Determine Queue Buildup
+                    element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // Update previous Specific Flow, Effective Width and Calculated Flow
+                    _previousEffectiveWidth = element.EffectiveWidth;
+                    _previousSpecificFlow = element.SpecificFlow;
+                    _previousCalculatedFlow = element.CalculatedFlow;
+
                     updatedRoute.Add(element);
                 }
 
+                // Door
                 if (routeElement.RouteType == RouteTypes.Door)
                 {
                     // Cast routeElement to Door
@@ -62,9 +109,16 @@ namespace Evacuation.lib.Models
                     // Determine Effective Width
                     element.EffectiveWidth = element.Width - (2 * element.BoundaryLayerWidth);
 
+                    // Check Transition Type
                     if (routeElement.TransitionType == TransitionTypes.FirstRouteElement)
                     {
+                        if (element.Density < 0.001)
+                        {
+                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                        }
 
+                        // Determine Specific Flow
+                        element.SpecificFlow = (element.KValue - _a * element.KValue * element.Density) * element.Density;
                     }
 
                     // Check Transition Type
@@ -80,19 +134,21 @@ namespace Evacuation.lib.Models
                         element.SpecificFlow = element.Fsmax;
                     }
 
-                    // Update previous Specific Flow and EffectiveWidth
-                    _previousEffectiveWidth = element.EffectiveWidth;
-                    _previousSpecificFlow = element.SpecificFlow;
-
                     // Determine Calculated Flow
                     element.CalculatedFlow = element.SpecificFlow * element.EffectiveWidth;
 
                     // Determine Queue Buildup
-                    element.QueueBuildup = _previousSpecificFlow - element.SpecificFlow;
+                    element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // Update previous Specific Flow, Effective Width and Calculated Flow
+                    _previousEffectiveWidth = element.EffectiveWidth;
+                    _previousSpecificFlow = element.SpecificFlow;
+                    _previousCalculatedFlow = element.CalculatedFlow;
 
                     updatedRoute.Add(element);
                 }
 
+                // Stairway
                 if (routeElement.RouteType == RouteTypes.Stairway)
                 {
                     // Cast routeElement to Stairway
@@ -102,10 +158,44 @@ namespace Evacuation.lib.Models
                     element.EffectiveWidth = element.Width - (2 * element.BoundaryLayerWidth);
 
                     // Check Transition Type
+                    if (routeElement.TransitionType == TransitionTypes.FirstRouteElement)
+                    {
+                        if (element.Density < 0.001)
+                        {
+                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                        }
+
+                        // Determine Specific Flow
+                        element.SpecificFlow = (element.KValue - _a * element.KValue * element.Density) * element.Density;
+                    }
+
+                    // Check Transition Type
                     if (routeElement.TransitionType != TransitionTypes.FirstRouteElement)
                     {
                         // Determine Specific Flow
                         element.SpecificFlow = GetSpecificFlow(element);
+
+                        // Determine Density
+                        var a = _a * element.KValue;
+                        var b = -element.KValue;
+                        var c = element.SpecificFlow;
+
+                        var roots = QuadraticEquationSolver(a, b, c);
+
+                        if (roots.Item1 <= _dmax)
+                        {
+                            element.Density = roots.Item1;
+                        }
+
+                        if (roots.Item2 <= _dmax)
+                        {
+                            element.Density = roots.Item2;
+                        }
+
+                        if (element.Density < 0.001)
+                        {
+                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                        }
                     }
 
                     // Check if calculated specific flow exceed maximum specific flow
@@ -114,29 +204,22 @@ namespace Evacuation.lib.Models
                         element.SpecificFlow = element.Fsmax;
                     }
 
-                    // Determine Density
-                    var a = _a * element.KValue;
-                    var b = -element.KValue;
-                    var c = element.SpecificFlow;
-
-                    var roots = QuadraticEquationSolver(a, b, c);
-
-                    if (roots.Item1 <= _dmax)
-                    {
-                        element.Density = roots.Item1;
-                    }
-
-                    if (roots.Item2 <= _dmax)
-                    {
-                        element.Density = roots.Item2;
-                    }
-
-                    if (Math.Abs(element.Density) < 0.001)
-                    {
-                        throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
-                    }
-
+                    // Determine Speed
                     element.Speed = element.KValue - _a * element.KValue * element.Density;
+
+                    // Determine Calculated Flow
+                    element.CalculatedFlow = element.SpecificFlow * element.EffectiveWidth;
+
+                    // Determine Travel Time
+                    element.TravelTime = element.Distance / element.Speed;
+
+                    // Determine Queue Buildup
+                    element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // Update previous Specific Flow, Effective Width and Calculated Flow
+                    _previousEffectiveWidth = element.EffectiveWidth;
+                    _previousSpecificFlow = element.SpecificFlow;
+                    _previousCalculatedFlow = element.CalculatedFlow;
 
                     updatedRoute.Add(element);
                 }

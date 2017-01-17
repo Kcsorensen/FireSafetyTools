@@ -57,7 +57,7 @@ namespace Evacuation.lib.ViewModels
 
             if (route.Count == 1)
             {
-                routeElement.TransitionType = TransitionTypes.RouteStartElement;
+                routeElement.TransitionType = TransitionTypes.FirstRouteElement;
             }
 
             if (route.Any(x => x.Guid == routeElement.Guid))
