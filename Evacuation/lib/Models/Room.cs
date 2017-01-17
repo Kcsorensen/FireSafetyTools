@@ -13,6 +13,7 @@ namespace Evacuation.lib.Models
         {
             base.RouteType = RouteTypes.Room;
             base.KValue = KValues.WideConcourse;
+            base.BoundaryLayerWidth = BoundaryLayerWidths.WideConcourse;
         }
     }
 }

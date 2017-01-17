@@ -2,10 +2,11 @@
 {
     public class RouteTypes
     {
-        public const int Room = 0;
-        public const int Handrail = 1;
-        public const int Corridor = 2;
-        public const int Door = 3;
-        public const int WideConcourse = 4;
+        public const int RouteStartingPoint = 0;
+        public const int Corridor = 1;
+        public const int Door = 2;
+        public const int WideConcourse = 3;
+        public const int Room = 4;
+        public const int Stairway = 5;
     }
 }
