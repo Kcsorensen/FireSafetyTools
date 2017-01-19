@@ -12,10 +12,6 @@ namespace FireSafetyTools.Controllers
 {
     public class DesignFireController : Controller
     {
-        public DesignFireController()
-        {
-        }
-
         public IActionResult Index()
         {
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)

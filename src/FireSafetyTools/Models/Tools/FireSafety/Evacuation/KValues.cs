@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
+﻿namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
 {
     public class KValues
     {
-        public const double StairWay = 0.15;
-        public const double Handrail = 0.09;
-        public const double Corridor = 0.20;
-        public const double WideConcourse = 0.46;
-        public const double Door = 0.15;
+        public const double Corridor = 1.40;
+        public const double Door = 1.40;
+        public const double WideConcourse = 1.40;
+        public const double Stairway180x280 = 1.08;
+        public const double Stairway165x305 = 1.16;
+        public const double Stairway165x330 = 1.23;
     }
 }

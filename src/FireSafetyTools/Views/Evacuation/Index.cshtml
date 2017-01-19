@@ -1,0 +1,100 @@
+﻿@using System.Threading.Tasks
+@using FireSafetyTools.Models.Tools.FireSafety.Evacuation
+@model FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation.EvacuationViewModel
+
+@{
+    ViewBag.Title = "Evacuation Modelling";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Second-Order Hydraulic Evacuation Model</h2>
+
+<div class="col-md-12" style="margin-top: 30px; padding-left: 0px;">
+    <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col col-xs-5">
+                    <h3 class="panel-title">List of Phases</h3>
+                </div>
+                <div class="col col-xs-7 text-right">
+                    <div class="dropdown" style="display: inline;" id="PhaseTypeId" Name="PhaseTypeIdId">
+                        @Html.ActionLink("Create Route", "CreateRoute", "Evacuation", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1" })
+                        <button id="dropDownMenu" class="btn btn-primary dropdown-toggle" style="position: relative; z-index: 1" type="button" data-toggle="dropdown">
+                            Add
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+
+                            @foreach (var routeType in RouteTypeHelper.ListOfRouteTypes)
+                            {
+                                <li>@Html.ActionLink(routeType.Name, "CreateNewRouteElement", "Evacuation", new {id = routeType.Id}, null)</li>
+                            }
+
+                        </ul>
+                    </div>
+                    @Html.ActionLink("Clear All", "ClearTable", "Evacuation", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1" })
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table id="phaseTable" class="table table-striped table-bordered table-list">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 50px ">#</th>
+                        <th style="text-align: left">Phase</th>
+                        <th class="hidden-sm hidden-xs" style="text-align: center">Duration</th>
+                        <th class="hidden-sm hidden-xs" style="text-align: center">Growth Rate</th>
+                        <th class="hidden-sm hidden-xs" style="text-align: center">Max Effect</th>
+                        <th style="text-align: center">Total Energy</th>
+                        <th style="text-align: center"><em class="fa fa-cog"></em></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @*@foreach (var phase in Model.Phases)
+                    {
+                        <tr>
+                            <td id="phaseid" style="text-align: center">@phase.Id</td>
+                            <td class="hidden-xs" style="text-align: left">@phase.Name</td>
+                            <td class="hidden-lg hidden-md hidden-sm" style="text-align: left">@phase.ShortName</td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.Duration s </td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.GrowthRateFactor</td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.TargetYq kW</td>
+                            <td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
+                            <td style="text-align: center">
+                                <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>
+                            </td>
+                        </tr>
+                    }*@
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col col-xs-4">
+                    Page 1 of 1
+                </div>
+                <div class="col col-xs-8">
+                    <ul class="pagination hidden-xs pull-right">
+                        <li><a href="#">1</a></li>
+                    </ul>
+                    <ul class="pagination visible-xs pull-right">
+                        <li><a href="#">«</a></li>
+                        <li><a href="#">»</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="inline" style="margin-bottom: 30px">
+
+    <a id="btnExport" class="btn btn-danger">Export to Pyrosim</a>
+    @Html.ActionLink("Export to Excel", "ExportToExcel", "DesignFire", null, new { @class = "btn btn-danger" })</>
+
+
+</div>
