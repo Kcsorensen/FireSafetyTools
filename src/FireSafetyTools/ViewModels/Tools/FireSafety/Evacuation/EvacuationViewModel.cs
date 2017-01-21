@@ -7,7 +7,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 {
     public class EvacuationViewModel
     {
-        public Dictionary<Route, List<BaseRouteElement>> Routes { get; set; }
+        public Dictionary<Guid, List<BaseRouteElement>> Routes { get; set; }
         public List<BaseRouteElement> RouteElements { get; set; }
 
         public EvacuationViewModel()
@@ -17,7 +17,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 
         public void Initiate()
         {
-            Routes = new Dictionary<Route, List<BaseRouteElement>>();
+            Routes = new Dictionary<Guid, List<BaseRouteElement>>();
             RouteElements = new List<BaseRouteElement>();
         }
 
@@ -28,28 +28,29 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 
         public void CreateRoute(CreateRouteViewModel viewModel)
         {
-            int routeId = (Routes.Count == 0) ? Routes.Count : Routes.Count + 1;
-
-            var route = new Route()
+            if (viewModel == null)
             {
-                Id = routeId,
-                DetectionTime = viewModel.DetectionTime,
-                NotificationTime = viewModel.NotificationTime,
-                PreEvacuationTime = viewModel.PreEvacuationTime
-            };
+                throw new NullReferenceException("Input parameter CreateRouteViewModel cannot be null, EvacuationViewModel -> CreateRoute");
+            }
+
+            int routeId = (Routes.Count == 0) ? Routes.Count : Routes.Count + 1;
 
             var listOfRouteElements = new List<BaseRouteElement>()
             {
                 new RouteStart()
                 {
+                    RouteId = routeId,
                     RouteElementId = 0,
                     Name = viewModel.Name,
                     NumberOfPeople = viewModel.NumberOfPeople,
-                    TransitionType = TransitionTypes.RouteStartElement
+                    TransitionType = TransitionTypes.RouteStartElement,
+                    DetectionTime = viewModel.DetectionTime,
+                    NotificationTime = viewModel.NotificationTime,
+                    PreEvacuationTime = viewModel.PreEvacuationTime
                 }
             };
 
-            Routes.Add(route, listOfRouteElements);
+            Routes.Add(Guid.NewGuid(), listOfRouteElements);
         }
 
         public void AddRouteElementToRoute(Guid guid, BaseRouteElement routeElement)
@@ -60,7 +61,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
             }
 
             // NullExceptionCheck is implemented in Single()
-            var route = Routes.Single(x => x.Key.Guid == guid).Value;
+            var route = Routes.Single(x => x.Key == guid).Value;
 
             if (route.Count == 1)
             {
@@ -77,14 +78,19 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 
         public List<BaseRouteElement> GetRoute(Guid guid)
         {
-            if (Routes.Any(x => x.Key.Guid != guid))
+            if (Routes.Any(x => x.Key != guid))
             {
                 throw new Exception("Cannot find any routes by that Guid, EvacuationViewModel -> GetRoute");
             }
 
-            var route = Routes.Single(x => x.Key.Guid == guid).Value;
+            var route = Routes.Single(x => x.Key == guid).Value;
 
             return route;
+        }
+
+        public void ClearRoutes()
+        {
+            
         }
     }
 }

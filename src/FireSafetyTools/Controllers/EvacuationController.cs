@@ -11,10 +11,10 @@ namespace FireSafetyTools.Controllers
         {
             if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
             {
-                var designFireViewModel = new EvacuationViewModel();
-                designFireViewModel.Initiate();
+                var evacuationViewModel = new EvacuationViewModel();
+                evacuationViewModel.Initiate();
 
-                HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, designFireViewModel);
+                HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
             }
 
             var viewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
@@ -31,6 +31,8 @@ namespace FireSafetyTools.Controllers
 
         public IActionResult CreateNewRouteElement()
         {
+
+
             return View();
         }
 
@@ -40,8 +42,14 @@ namespace FireSafetyTools.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveRoute()
+        public IActionResult SaveRoute(CreateRouteViewModel viewModel)
         {
+            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            evacuationViewModel.CreateRoute(viewModel);
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
+
             return RedirectToAction("Index");
         }
     }
