@@ -7,23 +7,23 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 {
     public class EvacuationViewModel
     {
-        public Dictionary<Guid, List<BaseRouteElement>> Routes { get; set; }
-        public List<BaseRouteElement> RouteElements { get; set; }
+        public Dictionary<int, List<BaseRouteElement>> Routes { get; set; }
 
         public EvacuationViewModel()
         {
-            Initiate();
+            Routes = new Dictionary<int, List<BaseRouteElement>>();
+
+            StartupExample();
         }
 
-        public void Initiate()
+        private void StartupExample()
         {
-            Routes = new Dictionary<Guid, List<BaseRouteElement>>();
-            RouteElements = new List<BaseRouteElement>();
-        }
+            var routeViewModel = new CreateRouteViewModel()
+            {
+                Name = "Evacuation"
+            };
 
-        public void AddRouteElement(BaseRouteElement routeelement)
-        {
-            RouteElements.Add(routeelement);
+            CreateRoute(routeViewModel);
         }
 
         public void CreateRoute(CreateRouteViewModel viewModel)
@@ -39,7 +39,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
             {
                 new RouteStart()
                 {
-                    RouteId = routeId,
                     RouteElementId = 0,
                     Name = viewModel.Name,
                     NumberOfPeople = viewModel.NumberOfPeople,
@@ -50,10 +49,10 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                 }
             };
 
-            Routes.Add(Guid.NewGuid(), listOfRouteElements);
+            Routes.Add(routeId, listOfRouteElements);
         }
 
-        public void AddRouteElementToRoute(Guid guid, BaseRouteElement routeElement)
+        public void AddRouteElementToRoute(CreateRouteElementViewModel viewModel)
         {
             if (Routes.Count == 0)
             {
@@ -61,36 +60,55 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
             }
 
             // NullExceptionCheck is implemented in Single()
-            var route = Routes.Single(x => x.Key == guid).Value;
+            var route = Routes.Single(x => x.Key == viewModel.RouteId).Value;
+
+            // Default value
+            int transitionType = TransitionTypes.OneFlowInOneFlowOut;
 
             if (route.Count == 1)
             {
-                routeElement.TransitionType = TransitionTypes.FirstRouteElement;
+                transitionType = TransitionTypes.FirstRouteElement;
             }
 
-            if (route.Any(x => x.Guid == routeElement.Guid))
+            if (viewModel.RouteTypeId == RouteTypeHelper.Corridor)
             {
-                throw new Exception("Cannot add a RouteElement in a route to the same route, EvacuationViewModel -> AddRouteElementToRoute");
+                var routeElement = new Corridor()
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    Distance = viewModel.Distance,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
             }
 
-            route.Add(routeElement);
+            //if (route.Any(x => x.Guid == routeElement.Guid))
+            //{
+            //    throw new Exception("Cannot add a RouteElement in a route to the same route, EvacuationViewModel -> AddRouteElementToRoute");
+            //}
+
+            //route.Add(routeElement);
         }
 
-        public List<BaseRouteElement> GetRoute(Guid guid)
+        public List<BaseRouteElement> GetRoute(int routeId)
         {
-            if (Routes.Any(x => x.Key != guid))
+            if (Routes.Any(x => x.Key != routeId))
             {
                 throw new Exception("Cannot find any routes by that Guid, EvacuationViewModel -> GetRoute");
             }
 
-            var route = Routes.Single(x => x.Key == guid).Value;
+            var route = Routes.Single(x => x.Key == routeId).Value;
 
             return route;
         }
 
         public void ClearRoutes()
         {
-            
+            Routes.Clear();
         }
     }
 }

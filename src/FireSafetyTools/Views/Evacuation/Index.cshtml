@@ -26,7 +26,7 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col col-xs-5">
-								<h3 class="panel-title">List of Route Elements</h3>
+								<h3 class="panel-title">List of route elements</h3>
 							</div>
 							<div class="col col-xs-7 text-right">
 								<div class="dropdown" style="display: inline">
@@ -37,11 +37,11 @@
 									<ul class="dropdown-menu">
 										@foreach (var routeType in RouteTypeHelper.ListOfRouteTypes)
 										{
-											<li>@Html.ActionLink(routeType.Name, "CreateNewRouteElement", "Evacuation", new { id = routeType.Id }, null)</li>
+											<li>@Html.ActionLink(routeType.Name, "CreateNewRouteElement", "Evacuation", new { routeTypeId = routeType.Id, routeId = route.Key }, null)</li>
 										}
 									</ul>
 								</div>
-								@Html.ActionLink("Edit", "ClearTable", "Evacuation", null, new { @class = "btn btn-danger btn-create", style = "position: relative; z-index: 1" })
+								@Html.ActionLink("Edit", "ClearTable", "Evacuation", null, new { @class = "btn btn-danger btn-create", style = "position: relative; z-index: 1", data_toggle = "tooltip", data_container = "body", title = "Edit the current route" })
 								@Html.ActionLink("Clear All", "ClearTable", "Evacuation", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1" })
 							</div>
 						</div>
@@ -53,28 +53,27 @@
 									<th style="text-align: center; width: 50px ">#</th>
 									<th style="text-align: left">Name</th>
 									<th class="hidden-sm hidden-xs" style="text-align: center">Width</th>
-									<th class="hidden-sm hidden-xs" style="text-align: center">Distance</th>
 									<th class="hidden-sm hidden-xs" style="text-align: center">Density</th>
+									<th class="hidden-sm hidden-xs" style="text-align: center">Transition</th>
+                                    <th style="text-align: center"><em class="fa fa-cog"></em></th>
 								</tr>
 							</thead>
 							<tbody>
 
-								@*@foreach (var phase in Model.Routes)
+								@foreach (var routeElement in route.Value)
 									{
 										<tr>
-											<td id="phaseid" style="text-align: center">@phase.Id</td>
-											<td class="hidden-xs" style="text-align: left">@phase.Name</td>
-											<td class="hidden-lg hidden-md hidden-sm" style="text-align: left">@phase.ShortName</td>
-											<td class="hidden-sm hidden-xs" style="text-align: center">@phase.Duration s </td>
-											<td class="hidden-sm hidden-xs" style="text-align: center">@phase.GrowthRateFactor</td>
-											<td class="hidden-sm hidden-xs" style="text-align: center">@phase.TargetYq kW</td>
-											<td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
+											<td id="phaseid" style="text-align: center">@routeElement.RouteElementId</td>
+											<td class="hidden-xs" style="text-align: left">@routeElement.Name</td>
+											<td class="hidden-sm hidden-xs" style="text-align: left">@routeElement.Width m</td>
+											<td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.Density p/m² </td>
+											<td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.TransitionType</td>
 											<td style="text-align: center">
-												<a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
+												<a href="@Url.Action("EditPhase", "DesignFire", new {id = routeElement.RouteElementId})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
 												<a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>
 											</td>
 										</tr>
-									}*@
+									}
 
 							</tbody>
 						</table>
@@ -91,7 +90,7 @@
 
 	@Html.ActionLink("Create Route", "CreateRoute", "Evacuation", null, new { @class = "btn btn-primary btn-create", style = "position: relative; z-index: 1" })
 
-	@Html.ActionLink("Clear All Routes", "ClearTable", "Evacuation", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1" })
+	@Html.ActionLink("Clear All Routes", "ClearTable", "Evacuation", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1"})
 
 	@Html.ActionLink("Export to Excel", "ExportToExcel", "DesignFire", null, new { @class = "btn btn-danger" })
 
@@ -185,6 +184,14 @@
 	.panel-default {
 		border-radius: 0px;
 	}
+
+	.tooltip-inner {
+		background-color: green;
+}
+
+	.tooltip.top .tooltip-arrow {
+		border-top-color: green;
+	}
 </style>
 
 @section scripts{
@@ -203,6 +210,9 @@
 				accordionContent.slideToggle(250);
 
 			});
+
+			// Select all elements with data-toggle="tooltips" in the document
+			$('[data-toggle="tooltip"]').tooltip({ container: 'body' });
 		});
 	</script>
 }

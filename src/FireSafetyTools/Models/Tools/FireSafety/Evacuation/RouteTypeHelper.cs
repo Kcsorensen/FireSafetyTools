@@ -22,5 +22,17 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
             new RouteType() {Id = Stairway, Name = "Stairway" },
             new RouteType() {Id = Door, Name = "Door" },
         };
+
+        public static string GetRouteTypeName(int routeTypeId)
+        {
+            if (routeTypeId < 0 || routeTypeId > ListOfRouteTypes.Count)
+            {
+                throw new IndexOutOfRangeException("Input parameter routeTypeId cannot be less then zero or larger than (ListOfRouteTypes.Count + 1), RouteTypeHelper -> GetRouteTypeName");
+            }
+
+            var routeTypeName = ListOfRouteTypes.Single(x => x.Id == routeTypeId).Name;
+
+            return routeTypeName;
+        }
     }
 }

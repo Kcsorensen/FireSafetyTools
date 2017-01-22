@@ -12,7 +12,6 @@ namespace FireSafetyTools.Controllers
             if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
             {
                 var evacuationViewModel = new EvacuationViewModel();
-                evacuationViewModel.Initiate();
 
                 HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
             }
@@ -29,24 +28,78 @@ namespace FireSafetyTools.Controllers
             return View(viewModel);
         }
 
-        public IActionResult CreateNewRouteElement()
+        public IActionResult CreateNewRouteElement(int routeTypeId, int routeId)
         {
+            if (routeTypeId == 0)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new CreateRouteElementViewModel()
+            {
+                RouteId = routeId,
+                RouteTypeId = routeTypeId
+            };
 
 
-            return View();
+
+            return View(viewModel);
         }
 
         public IActionResult ClearTable()
         {
-            return View();
+            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            evacuationViewModel.ClearRoutes();
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult SaveRoute(CreateRouteViewModel viewModel)
         {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
+            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
 
             evacuationViewModel.CreateRoute(viewModel);
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult SaveRouteElement(CreateRouteElementViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+
+            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            evacuationViewModel.AddRouteElementToRoute(viewModel);
 
             HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
 
