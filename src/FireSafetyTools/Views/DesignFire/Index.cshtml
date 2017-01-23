@@ -59,10 +59,10 @@
                             <td id="phaseid" style="text-align: center">@phase.Id</td>
                             <td class="hidden-xs" style="text-align: left">@phase.Name</td>
                             <td class="hidden-lg hidden-md hidden-sm" style="text-align: left">@phase.ShortName</td>
-                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.Duration s </td>
-                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.GrowthRateFactor</td>
-                            <td class="hidden-sm hidden-xs" style="text-align: center">@phase.TargetYq kW</td>
-                            <td style="text-align: center">@phase.TotalEnergyReleased MJ</td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(phase.Duration, 2) s </td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(phase.GrowthRateFactor, 5)</td>
+                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(phase.TargetYq, 2) kW</td>
+                            <td style="text-align: center">@Math.Round(phase.TotalEnergyReleased, 1) MJ</td>
                             <td style="text-align: center">
                                 <a href="@Url.Action("EditPhase", "DesignFire", new {id = phase.Id})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>

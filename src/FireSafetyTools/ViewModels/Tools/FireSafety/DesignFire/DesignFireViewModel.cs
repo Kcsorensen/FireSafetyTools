@@ -33,16 +33,16 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
             // Initially build we a growth, steady and decay phase for testing
             var growthFormViewModel = new PhaseFormViewModel()
             {
-                Duration = 100,
-                GrowthRateFactor = 0.047,
-                PhaseTypeId = PhaseTypeHelper.GrowthKnownDurationAndGrowthRate
+                Duration = 240,
+                TargetYq = 1550,
+                PhaseTypeId = PhaseTypeHelper.GrowthKnownDurationAndTargetEffect
             };
 
             AddPhase(growthFormViewModel);
 
             var steadyFormViewModel = new PhaseFormViewModel()
             {
-                Duration = 100,
+                Duration = 120,
                 PhaseTypeId = PhaseTypeHelper.SteadyKnownDuration
             };
 
@@ -50,9 +50,9 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire
 
             var decayFormViewModel = new PhaseFormViewModel()
             {
-                Duration = 100,
-                GrowthRateFactor = 0.047,
-                PhaseTypeId = PhaseTypeHelper.DecayKnownDurationAndGrowthRate
+                Duration = 1000,
+                TargetYq = 0,
+                PhaseTypeId = PhaseTypeHelper.DecayKnownDurationAndTargetEffect
             };
 
             AddPhase(decayFormViewModel);

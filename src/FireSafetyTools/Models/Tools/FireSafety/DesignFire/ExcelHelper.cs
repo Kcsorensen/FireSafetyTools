@@ -50,17 +50,17 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                 {
                     worksheetPhases.Cells[1 + phaseCounter, 1].Value = phase.Id;
                     worksheetPhases.Cells[1 + phaseCounter, 2].Value = phase.Name;
-                    worksheetPhases.Cells[1 + phaseCounter, 3].Value = phase.Duration;
-                    worksheetPhases.Cells[1 + phaseCounter, 4].Value = phase.GrowthRateFactor;
-                    worksheetPhases.Cells[1 + phaseCounter, 5].Value = phase.TargetYq;
-                    worksheetPhases.Cells[1 + phaseCounter, 6].Value = phase.TotalEnergyReleased;
+                    worksheetPhases.Cells[1 + phaseCounter, 3].Value = Math.Round(phase.Duration, 2);
+                    worksheetPhases.Cells[1 + phaseCounter, 4].Value = Math.Round(phase.GrowthRateFactor, 5);
+                    worksheetPhases.Cells[1 + phaseCounter, 5].Value = Math.Round(phase.TargetYq, 2);
+                    worksheetPhases.Cells[1 + phaseCounter, 6].Value = Math.Round(phase.TotalEnergyReleased, 2);
 
                     phaseCounter += 1;
                 }
 
                 // Two rows below the list of phases, add a the sum of Energy released 
                 worksheetPhases.Cells[3 + phaseCounter, 2].Value = "Sum of Energy Released";
-                worksheetPhases.Cells[3 + phaseCounter, 6].Value = designFireViewModel.Phases.Sum(x => x.TotalEnergyReleased);
+                worksheetPhases.Cells[3 + phaseCounter, 6].Value = Math.Round(designFireViewModel.Phases.Sum(x => x.TotalEnergyReleased), 2);
 
                 #endregion
 

@@ -146,10 +146,7 @@ namespace FireSafetyTools.Controllers
         {
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
             {
-                var designFireViewModel = new DesignFireViewModel();
-                designFireViewModel.Initiate();
-
-                HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+                return RedirectToAction("Index");
             }
 
             var viewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
@@ -167,10 +164,7 @@ namespace FireSafetyTools.Controllers
         {
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
             {
-                var designFireViewModel = new DesignFireViewModel();
-                designFireViewModel.Initiate();
-
-                HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+                return RedirectToAction("Index");
             }
 
             var viewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
@@ -184,10 +178,7 @@ namespace FireSafetyTools.Controllers
         {
             if (HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData) == null)
             {
-                var designFireViewModel = new DesignFireViewModel();
-                designFireViewModel.Initiate();
-
-                HttpContext.Session.SetObjectAsJson(SessionNames.DesignFireData, designFireViewModel);
+                return RedirectToAction("Index");
             }
 
             var viewModel = HttpContext.Session.GetObjectFromJson<DesignFireViewModel>(SessionNames.DesignFireData);
