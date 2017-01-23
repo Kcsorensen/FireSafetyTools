@@ -41,7 +41,7 @@
 										}
 									</ul>
 								</div>
-								@Html.ActionLink("Edit", "ClearTable", "Evacuation", null, new { @class = "btn btn-danger btn-create", style = "position: relative; z-index: 1", data_toggle = "tooltip", data_container = "body", title = "Edit the current route" })
+								@Html.ActionLink("Edit", "EditRoute", "Evacuation", null, new { @class = "btn btn-danger btn-create", style = "position: relative; z-index: 1", data_toggle = "tooltip", data_container = "body", title = "Edit the current route" })
 								@Html.ActionLink("Clear All", "ClearTable", "Evacuation", null, new { @class = "btn btn-warning btn-create", style = "position: relative; z-index: 1" })
 							</div>
 						</div>
@@ -61,19 +61,22 @@
 							<tbody>
 
 								@foreach (var routeElement in route.Value)
-									{
-										<tr>
-											<td id="phaseid" style="text-align: center">@routeElement.RouteElementId</td>
-											<td class="hidden-xs" style="text-align: left">@routeElement.Name</td>
-											<td class="hidden-sm hidden-xs" style="text-align: left">@routeElement.Width m</td>
-											<td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.Density p/m² </td>
-											<td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.TransitionType</td>
-											<td style="text-align: center">
-												<a href="@Url.Action("EditPhase", "DesignFire", new {id = routeElement.RouteElementId})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
-												<a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>
-											</td>
-										</tr>
-									}
+                                {
+                                    if (routeElement.RouteElementId != 0)
+                                    {
+                                        <tr>
+                                            <td id="phaseid" style="text-align: center">@routeElement.RouteElementId</td>
+                                            <td class="hidden-xs" style="text-align: left">@routeElement.Name</td>
+                                            <td class="hidden-sm hidden-xs" style="text-align: left">@routeElement.Width m</td>
+                                            <td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.Density p/m² </td>
+                                            <td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.TransitionType</td>
+                                            <td style="text-align: center">
+                                                <a href="@Url.Action("EditRouteElement", "Evacuation", new {id = routeElement.RouteElementId})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
+                                                <a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
 
 							</tbody>
 						</table>

@@ -105,5 +105,15 @@ namespace FireSafetyTools.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult EditRoute(int routeId)
+        {
+            return View("Index");
+        }
+
+        public IActionResult EditRouteElement(int routeId, int routeElementId)
+        {
+            return View("Index");
+        }
     }
 }
