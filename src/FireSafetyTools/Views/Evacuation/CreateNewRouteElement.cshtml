@@ -1,0 +1,89 @@
+﻿@using FireSafetyTools.Models.Tools.FireSafety.Evacuation
+@model FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation.CreateRouteElementViewModel
+
+@{
+    ViewBag.Title = "Evacuation Modelling";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Create a new @RouteTypeHelper.GetRouteTypeName(Model.RouteTypeId)</h2>
+
+@using (Html.BeginForm("SaveRouteElement", "Evacuation"))
+{
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group" style="margin-top: 30px; margin-bottom: 30px;">
+                @Html.LabelFor(d => d.Name)
+                @Html.TextBoxFor(d => d.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.Name)
+            </div>
+        </li>
+    </ul>
+
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.Distance)
+                @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.Distance)
+            </div>
+        </li>
+
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.NumberOfPeople)
+                @Html.TextBoxFor(d => d.NumberOfPeople, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.NumberOfPeople)
+            </div>
+        </li>
+    </ul>
+
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.Width)
+                @Html.TextBoxFor(d => d.Width, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.Width)
+            </div>
+        </li>
+
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.Density)
+                @Html.TextBoxFor(d => d.Density, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.Density)
+            </div>
+        </li>
+    </ul>
+
+    <div id="clearline"></div>
+
+    @Html.TextBoxFor(d => d.RouteId, Model.RouteId.ToString(), new { @class = "hidden" })
+    @Html.TextBoxFor(d => d.RouteTypeId, Model.RouteTypeId.ToString(), new { @class = "hidden" })
+    <button type="submit" class="btn btn-danger">Save Route</button>
+}
+
+<style>
+    ul.listoftextboxes {
+        padding: 0px;
+    }
+
+    li.textboxblock, li.dropboxblock {
+        display: inline-block;
+        width: 280px;
+        text-align: left;
+        padding-left: 0px;
+        margin-right: 30px;
+    }
+
+    li.textboxblock {
+        height: 80px;
+    }
+
+    #clearline {
+        clear: both;
+    }
+</style>
+
+

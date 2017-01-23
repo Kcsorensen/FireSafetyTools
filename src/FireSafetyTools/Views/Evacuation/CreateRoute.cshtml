@@ -1,0 +1,86 @@
+﻿@model FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation.CreateRouteViewModel
+
+@{
+    ViewBag.Title = "Create new Route";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create a new Route</h2>
+
+@using (Html.BeginForm("SaveRoute", "Evacuation"))
+{
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group" style="margin-top: 30px; margin-bottom: 30px;">
+                @Html.LabelFor(d => d.Name)
+                @Html.TextBoxFor(d => d.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.Name)
+            </div>
+        </li>
+    </ul>
+
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.DetectionTime)
+                @Html.TextBoxFor(d => d.DetectionTime, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.DetectionTime)
+            </div>
+        </li>
+
+        <li class="dropboxblock col-lg-8 col-md-8">
+            <div class="form-group">
+                @Html.LabelFor(d => d.NotificationTime)
+                @Html.TextBoxFor(d => d.NotificationTime, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.NotificationTime)
+            </div>
+        </li>
+    </ul>
+
+    <ul class="listoftextboxes col-lg-8 col-md-8">
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.PreEvacuationTime)
+                @Html.TextBoxFor(d => d.PreEvacuationTime, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.PreEvacuationTime)
+            </div>
+        </li>
+
+        <li class="dropboxblock col-lg-6 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.NumberOfPeople)
+                @Html.TextBoxFor(d => d.NumberOfPeople, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.NumberOfPeople)
+            </div>
+        </li>
+    </ul>
+
+    <div id="clearline"></div>
+
+    @*@Html.TextBoxFor(d => d.PhaseTypeId, Model.PhaseTypeId.ToString(), new { @class = "hidden" })*@
+    <button type="submit" class="btn btn-danger">Save Route</button>
+
+    }
+
+<style>
+    ul.listoftextboxes {
+        padding: 0px;
+    }
+
+    li.textboxblock, li.dropboxblock {
+        display: inline-block;
+        width: 280px;
+        text-align: left;
+        padding-left: 0px;
+        margin-right: 30px;
+    }
+
+    li.textboxblock {
+        height: 80px;
+    }
+
+    #clearline {
+        clear: both;
+    }
+</style>
+
