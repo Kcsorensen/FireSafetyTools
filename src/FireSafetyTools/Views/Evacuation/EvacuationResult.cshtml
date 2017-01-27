@@ -1,0 +1,41 @@
+﻿@model FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation.EvacuationViewModel
+
+@{
+    ViewBag.Title = "Result of the evacuation modelling";
+    Layout = "_Layout";
+}
+
+<h2>Result of the evacuation modelling</h2>
+
+<table class="table table-striped" style="margin-top: 30px">
+    <thead>
+        <tr>
+            <th style="width: 40%">Route</th>
+            <th style="width: 10%; text-align: center">Effective Width</th>
+            <th style="width: 20%; text-align: center">Density</th>
+            <th style="width: 15%; text-align: center">Distance</th>
+            <th style="width: 15%; text-align: center">First Person Time</th>
+            <th style="width: 15%; text-align: center">Last Person Time</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var route in @Model.Routes)
+    {
+        foreach (var routeElement in route.Value)
+        {
+            <tr>
+                <td name="alignLeft">@routeElement.Name</td>
+                <td>@routeElement.EffectiveWidth</td>
+                <td>@routeElement.Density</td>
+                <td>@routeElement.Distance</td>
+                <td>@routeElement.FirstPersonTime</td>
+                <td>@routeElement.LastPersonTime</td>
+            </tr>
+        }
+
+    }
+
+    </tbody>
+
+</table>

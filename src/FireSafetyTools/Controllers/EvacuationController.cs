@@ -1,3 +1,4 @@
+using System.Linq;
 using FireSafetyTools.Models.Tools.FireSafety.Evacuation;
 using FireSafetyTools.Services;
 using FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation;
@@ -35,13 +36,29 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
+            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            var countOfRouteElements = evacuationViewModel.Routes.Single(x => x.Key == routeId).Value.Count;
+
+            // Default TransitionType
+            var transitionTypeId = TransitionTypes.OneFlowInOneFlowOut;
+
+            if (countOfRouteElements == 1)
+            {
+                transitionTypeId = TransitionTypes.FirstRouteElement;
+            }
+
             var viewModel = new CreateRouteElementViewModel()
             {
                 RouteId = routeId,
-                RouteTypeId = routeTypeId
+                RouteTypeId = routeTypeId,
+                TransitionType = transitionTypeId
             };
-
-
 
             return View(viewModel);
         }
@@ -114,6 +131,18 @@ namespace FireSafetyTools.Controllers
         public IActionResult EditRouteElement(int routeId, int routeElementId)
         {
             return View("Index");
+        }
+
+        public IActionResult CalculateRoutes()
+        {
+            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            return View("EvacuationResult", evacuationViewModel);
         }
     }
 }

@@ -22,6 +22,8 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
             // Create a placeholder for the updated routes and populate with the first item from input parameter, RouteStart
             var updatedRoute = new List<BaseRouteElement>() { route.First() };
 
+            var previousFirstPersonTime = 0.0;
+
             foreach (var routeElement in route)
             {
                 // Corridor
@@ -38,7 +40,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     {
                         if (element.Density < 0.001)
                         {
-                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                            throw new Exception("The Density cannot be zero for the First RouteElement, Calculator -> CalculateRoute");
                         }
 
                         // Determine Specific Flow
@@ -91,6 +93,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
 
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // First persons Time
+                    element.FirstPersonTime = (element.Distance != 0.00) ? previousFirstPersonTime + element.Distance/element.Speed : 0;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;

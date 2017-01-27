@@ -9,6 +9,8 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
         public int RouteId { get; set; }
         public int RouteTypeId { get; set; }
         public bool HasHandrails { get; set; }
+        public int TransitionType { get; set; }
+        public int StairwayType { get; set; }
 
         [Display(Name = "Width [m]")]
         public double Width { get; set; }

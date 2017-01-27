@@ -22,39 +22,45 @@
     </ul>
 
     <ul class="listoftextboxes col-lg-8 col-md-8">
-        <li class="dropboxblock col-lg-6 col-md-6">
-            <div class="form-group">
-                @Html.LabelFor(d => d.Distance)
-                @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
-                @Html.ValidationMessageFor(d => d.Distance)
-            </div>
-        </li>
+        
+        @if (Model.RouteTypeId != RouteTypeHelper.Door)
+        {
+            <li class="dropboxblock col-lg-6 col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.Distance)
+                    @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.Distance)
+                </div>
+            </li>
+        }
 
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.LabelFor(d => d.NumberOfPeople)
-                @Html.TextBoxFor(d => d.NumberOfPeople, new { @class = "form-control" })
+                @Html.TextBoxFor(d => d.NumberOfPeople, new {@class = "form-control"})
                 @Html.ValidationMessageFor(d => d.NumberOfPeople)
             </div>
         </li>
-    </ul>
 
-    <ul class="listoftextboxes col-lg-8 col-md-8">
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
                 @Html.LabelFor(d => d.Width)
-                @Html.TextBoxFor(d => d.Width, new { @class = "form-control" })
+                @Html.TextBoxFor(d => d.Width, new {@class = "form-control"})
                 @Html.ValidationMessageFor(d => d.Width)
             </div>
         </li>
+        
+        @if (Model.TransitionType == TransitionTypes.FirstRouteElement)
+        {
+            <li class="dropboxblock col-lg-6 col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.Density)
+                    @Html.TextBoxFor(d => d.Density, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.Density)
+                </div>
+            </li>
+        }
 
-        <li class="dropboxblock col-lg-6 col-md-6">
-            <div class="form-group">
-                @Html.LabelFor(d => d.Density)
-                @Html.TextBoxFor(d => d.Density, new { @class = "form-control" })
-                @Html.ValidationMessageFor(d => d.Density)
-            </div>
-        </li>
     </ul>
 
     <div id="clearline"></div>

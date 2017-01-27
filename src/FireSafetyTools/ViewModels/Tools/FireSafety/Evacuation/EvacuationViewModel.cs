@@ -86,6 +86,53 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                 route.Add(routeElement);
             }
 
+            if (viewModel.RouteTypeId == RouteTypeHelper.Door)
+            {
+                var routeElement = new Door()
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
+            }
+
+            if (viewModel.RouteTypeId == RouteTypeHelper.Stairway)
+            {
+                var routeElement = new Stairway(viewModel.StairwayType)
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    Distance = viewModel.Distance,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
+            }
+
+            if (viewModel.RouteTypeId == RouteTypeHelper.WideConcourse)
+            {
+                var routeElement = new Room()
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    Distance = viewModel.Distance,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
+            }
+
             //if (route.Any(x => x.Guid == routeElement.Guid))
             //{
             //    throw new Exception("Cannot add a RouteElement in a route to the same route, EvacuationViewModel -> AddRouteElementToRoute");

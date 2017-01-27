@@ -18,6 +18,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
         public double Density { get; set; }
         public int TransitionType { get; set; }
         public double QueueBuildup { get; set; }
+        public double Distance { get; set; }
+        public double FirstPersonTime { get; set; }
+        public double LastPersonTime { get; set; }
 
         public BaseRouteElement()
         {
