@@ -5,6 +5,7 @@
         public double DetectionTime { get; set; }
         public double NotificationTime { get; set; }
         public double PreEvacuationTime { get; set; }
+        public double NumberOfPeople { get; set; }
 
         public RouteStart()
         {

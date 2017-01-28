@@ -15,7 +15,9 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 
             var routeViewModel = new CreateRouteViewModel()
             {
-                Name = "Evacuation from 9th floor"
+                Name = "Evacuation from 9th floor",
+                NumberOfPeople = 150
+                
             };
 
             CreateRoute(routeViewModel);
@@ -109,7 +111,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Name = viewModel.Name,
                     Width = viewModel.Width,
                     Density = viewModel.Density,
-                    NumberOfPeople = viewModel.NumberOfPeople,
                     Distance = viewModel.Distance,
                     TransitionType = transitionType,
                     RouteElementId = route.Count
@@ -125,7 +126,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Name = viewModel.Name,
                     Width = viewModel.Width,
                     Density = viewModel.Density,
-                    NumberOfPeople = viewModel.NumberOfPeople,
                     TransitionType = transitionType,
                     RouteElementId = route.Count
                 };
@@ -140,7 +140,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Name = viewModel.Name,
                     Width = viewModel.Width,
                     Density = viewModel.Density,
-                    NumberOfPeople = viewModel.NumberOfPeople,
                     Distance = viewModel.Distance,
                     TransitionType = transitionType,
                     RouteElementId = route.Count
@@ -156,7 +155,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Name = viewModel.Name,
                     Width = viewModel.Width,
                     Density = viewModel.Density,
-                    NumberOfPeople = viewModel.NumberOfPeople,
                     Distance = viewModel.Distance,
                     TransitionType = transitionType,
                     RouteElementId = route.Count

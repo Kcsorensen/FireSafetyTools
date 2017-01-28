@@ -23,7 +23,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
         public double LastPersonTime { get; set; }
         public double TimeForPassage { get; set; }
         public double Speed { get; set; }
-        public double NumberOfPeople { get; set; }
+        //public double NumberOfPeople { get; set; }
         public bool HasHandrails { get; set; }
         public double TravelTime { get; set; }
 

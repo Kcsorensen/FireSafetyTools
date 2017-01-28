@@ -13,6 +13,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
         private double _previousCalculatedFlow;
         private double _previousFirstPersonTime;
         private double _previousLastPersonTime;
+        private double _numberOfPeople;
 
         public List<BaseRouteElement> CalculateRoute(List<BaseRouteElement> route)
         {
@@ -22,7 +23,9 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
             }
 
             // Create a placeholder for the updated routes and populate with the first item from input parameter, RouteStart
-            var updatedRoute = new List<BaseRouteElement>() { route.First() };
+            var routeStart = (RouteStart) route.First();
+
+            var updatedRoute = new List<BaseRouteElement>() { routeStart };
              
             // Skal ligges i foreach for routes, så den resettes hver gang der kikkes på en ny route 
             _previousEffectiveWidth = 0.0;
@@ -30,6 +33,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
             _previousCalculatedFlow = 0.0;
             _previousFirstPersonTime = 0.0;
             _previousLastPersonTime = 0.0;
+            _numberOfPeople = routeStart.NumberOfPeople;
 
             foreach (var routeElement in route)
             {
@@ -99,7 +103,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     element.TravelTime = element.Distance / element.Speed;
 
                     // Time for Passage
-                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+                    element.TimeForPassage = _numberOfPeople / element.CalculatedFlow;
 
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
@@ -160,7 +164,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     element.CalculatedFlow = element.SpecificFlow * element.EffectiveWidth;
 
                     // Time for Passage
-                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+                    element.TimeForPassage = _numberOfPeople / element.CalculatedFlow;
 
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
@@ -249,7 +253,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     element.TravelTime = element.Distance / element.Speed;
 
                     // Time for Passage
-                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+                    element.TimeForPassage = _numberOfPeople / element.CalculatedFlow;
 
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
