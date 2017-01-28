@@ -67,8 +67,8 @@
                                         <tr>
                                             <td id="phaseid" style="text-align: center">@routeElement.RouteElementId</td>
                                             <td class="hidden-xs" style="text-align: left">@routeElement.Name</td>
-                                            <td class="hidden-sm hidden-xs" style="text-align: left">@routeElement.Width m</td>
-                                            <td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.Density p/m² </td>
+                                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(routeElement.Width, 2) m</td>
+                                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(routeElement.Density, 2) p/m² </td>
                                             <td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.TransitionType</td>
                                             <td style="text-align: center">
                                                 <a href="@Url.Action("EditRouteElement", "Evacuation", new {id = routeElement.RouteElementId})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
@@ -202,12 +202,17 @@
 @section scripts{
 	<script>
 
-		$(document).ready(function () {
-			$('.accordion-toggle').on('click', function (event) {
+        $(document).ready(function () {
+
+            // create accordion variables
+            var accordion = $(".accordion-toggle");
+            var accordionContent = accordion.next('.accordion-content');
+
+            accordion.toggleClass("open");
+            accordionContent.slideToggle(250);
+
+			$(".accordion-toggle").on("click", function (event) {
 				event.preventDefault();
-				// create accordion variables
-				var accordion = $(this);
-				var accordionContent = accordion.next('.accordion-content');
 
 				// toggle accordion link open class
 				accordion.toggleClass("open");
@@ -217,7 +222,7 @@
 			});
 
 			// Select all elements with data-toggle="tooltips" in the document
-			$('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+			$('[data-toggle="tooltip"]').tooltip({ container: "body" });
 		});
 	</script>
 }

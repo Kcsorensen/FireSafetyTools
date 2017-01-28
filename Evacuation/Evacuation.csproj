@@ -59,10 +59,14 @@
     <Compile Include="lib\Models\KValues.cs" />
     <Compile Include="lib\Models\Room.cs" />
     <Compile Include="lib\Models\RouteStart.cs" />
-    <Compile Include="lib\Models\RouteTypes.cs" />
+    <Compile Include="lib\Models\RouteType.cs" />
+    <Compile Include="lib\Models\RouteTypeHelper.cs" />
+    <Compile Include="lib\Models\SessionNames.cs" />
     <Compile Include="lib\Models\Stairway.cs" />
     <Compile Include="lib\Models\StairwayTypes.cs" />
     <Compile Include="lib\Models\TransitionTypes.cs" />
+    <Compile Include="lib\ViewModels\CreateRouteElementViewModel.cs" />
+    <Compile Include="lib\ViewModels\CreateRouteViewModel.cs" />
     <Compile Include="lib\ViewModels\EvacuationViewModel.cs" />
     <Compile Include="SfpeExamples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

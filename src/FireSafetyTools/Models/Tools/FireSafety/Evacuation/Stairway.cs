@@ -3,15 +3,11 @@
     public class Stairway : BaseRouteElement
     {
         public int StairwayType { get; set; }
-        public double Speed { get; set; }
-        public double NumberOfPeople { get; set; }
-        public bool HasHandrails { get; set; }
-        public double TravelTime { get; set; }
 
         public Stairway(int stairwayType)
         {
             StairwayType = stairwayType;
-            base.RouteType = RouteTypeHelper.Stairway;
+            base.RouteTypeId = RouteTypeHelper.Stairway;
             base.BoundaryLayerWidth = BoundaryLayerWidths.Stairway;
 
             if (StairwayType == StairwayTypes.Rise180xTread280)

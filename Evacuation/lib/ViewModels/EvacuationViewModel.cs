@@ -3,49 +3,75 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Evacuation.lib.ViewModels
 {
     public class EvacuationViewModel
     {
-        public Dictionary<string, List<BaseRouteElement>> Routes { get; set; }
-        public List<BaseRouteElement> RouteElements { get; set; }
-
-        public EvacuationViewModel()
-        {
-            Initiate();
-        }
+        public Dictionary<int, List<BaseRouteElement>> Routes { get; set; }
 
         public void Initiate()
         {
-            Routes = new Dictionary<string, List<BaseRouteElement>>();
-            RouteElements = new List<BaseRouteElement>();
+            Routes = new Dictionary<int, List<BaseRouteElement>>();
+
+            //var routeViewModel = new CreateRouteViewModel()
+            //{
+            //    Name = "Evacuation from 9th floor"
+            //};
+
+            //CreateRoute(routeViewModel);
+
+            //var corridor = new CreateRouteElementViewModel()
+            //{
+            //    RouteId = Routes.First().Key,
+            //    RouteTypeId = RouteTypeHelper.Corridor,
+            //    Name = "9th floor Corridor",
+            //    Width = 2.44,
+            //    Distance = (15.2 + 45.7) / 2,
+            //    NumberOfPeople = 150,
+            //    Density = 150 / (2.44 * 45.7)
+            //};
+
+            //AddRouteElementToRoute(corridor);
+
+            //var door = new CreateRouteElementViewModel()
+            //{
+            //    RouteId = Routes.First().Key,
+            //    RouteTypeId = RouteTypeHelper.Door,
+            //    Name = "9th floor Door",
+            //    Width = 1.12,
+            //    NumberOfPeople = 150
+            //};
+
+            //AddRouteElementToRoute(door);
         }
 
-        public void AddRouteElement(BaseRouteElement routeelement)
+        public void CreateRoute(CreateRouteViewModel viewModel)
         {
-            RouteElements.Add(routeelement);
-        }
-
-        public void CreateRoute(string routeName, double numberOfPeople)
-        {
-            if (Routes.Any(x => x.Key == routeName))
+            if (viewModel == null)
             {
-                throw new Exception("Input parameter routeName cannot already exist in the Dictionary, EvacuationViewModel -> CreateRoute");
+                throw new NullReferenceException("Input parameter CreateRouteViewModel cannot be null, EvacuationViewModel -> CreateRoute");
             }
 
-            Routes.Add(routeName, new List<BaseRouteElement>()
+            int routeId = (Routes.Count == 0) ? Routes.Count : Routes.Count + 1;
+
+            var listOfRouteElements = new List<BaseRouteElement>()
             {
                 new RouteStart()
                 {
-                    Name = routeName,
-                    NumberOfPeople = numberOfPeople,
-                    TransitionType = TransitionTypes.RouteStartElement
+                    RouteElementId = 0,
+                    Name = viewModel.Name,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    TransitionType = TransitionTypes.RouteStartElement,
+                    DetectionTime = viewModel.DetectionTime,
+                    NotificationTime = viewModel.NotificationTime,
+                    PreEvacuationTime = viewModel.PreEvacuationTime
                 }
-            });
+            };
+
+            Routes.Add(routeId, listOfRouteElements);
         }
 
-        public void AddRouteElementToRoute(string routeName, BaseRouteElement routeElement)
+        public void AddRouteElementToRoute(CreateRouteElementViewModel viewModel)
         {
             if (Routes.Count == 0)
             {
@@ -53,31 +79,120 @@ namespace Evacuation.lib.ViewModels
             }
 
             // NullExceptionCheck is implemented in Single()
-            var route = Routes.Single(x => x.Key == routeName).Value;
+            var route = Routes.Single(x => x.Key == viewModel.RouteId).Value;
+
+            // Default value
+            int transitionType = TransitionTypes.OneFlowInOneFlowOut;
 
             if (route.Count == 1)
             {
-                routeElement.TransitionType = TransitionTypes.FirstRouteElement;
+                transitionType = TransitionTypes.FirstRouteElement;
             }
 
-            if (route.Any(x => x.Guid == routeElement.Guid))
+            if (viewModel.RouteTypeId == RouteTypeHelper.Corridor)
             {
-                throw new Exception("Cannot add a RouteElement in a route to the same route, EvacuationViewModel -> AddRouteElementToRoute");
+                var routeElement = new Corridor()
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    Distance = viewModel.Distance,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
             }
 
-            route.Add(routeElement);
+            if (viewModel.RouteTypeId == RouteTypeHelper.Door)
+            {
+                var routeElement = new Door()
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
+            }
+
+            if (viewModel.RouteTypeId == RouteTypeHelper.Stairway)
+            {
+                var routeElement = new Stairway(viewModel.StairwayType)
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    Distance = viewModel.Distance,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
+            }
+
+            if (viewModel.RouteTypeId == RouteTypeHelper.WideConcourse)
+            {
+                var routeElement = new Room()
+                {
+                    Name = viewModel.Name,
+                    Width = viewModel.Width,
+                    Density = viewModel.Density,
+                    NumberOfPeople = viewModel.NumberOfPeople,
+                    Distance = viewModel.Distance,
+                    TransitionType = transitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
+            }
+
+            //if (route.Any(x => x.Guid == routeElement.Guid))
+            //{
+            //    throw new Exception("Cannot add a RouteElement in a route to the same route, EvacuationViewModel -> AddRouteElementToRoute");
+            //}
+
+            //route.Add(routeElement);
         }
 
-        public List<BaseRouteElement> GetRoute(string routeName)
+        public List<BaseRouteElement> GetRoute(int routeId)
         {
-            if (Routes.Any(x => x.Key != routeName))
+            if (Routes.Any(x => x.Key != routeId))
             {
-                throw new Exception("Cannot find any routes by that name, EvacuationViewModel -> GetRoute");
+                throw new Exception("Cannot find any routes by that Guid, EvacuationViewModel -> GetRoute");
             }
 
-            var route = Routes.Single(x => x.Key == routeName).Value;
+            var route = Routes.Single(x => x.Key == routeId).Value;
 
             return route;
+        }
+
+        public void CalculateRoutes()
+        {
+            var calculator = new Calculator();
+
+            foreach (var route in Routes)
+            {
+
+
+                foreach (var routeElement in route.Value)
+                {
+                    if (routeElement.RouteTypeId == RouteTypeHelper.Door)
+                    {
+                        var door = routeElement as Door;
+                    }
+                }
+            }
+        }
+
+        public void ClearRoutes()
+        {
+            Routes.Clear();
         }
     }
 }

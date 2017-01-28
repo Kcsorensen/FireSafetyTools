@@ -11,6 +11,9 @@ namespace Evacuation.lib.Models
         private double _previousEffectiveWidth;
         private double _previousSpecificFlow;
         private double _previousCalculatedFlow;
+        private double _previousFirstPersonTime;
+        private double _previousLastPersonTime;
+
 
         public List<BaseRouteElement> CalculateRoute(List<BaseRouteElement> route)
         {
@@ -22,10 +25,17 @@ namespace Evacuation.lib.Models
             // Create a placeholder for the updated routes and populate with the first item from input parameter, RouteStart
             var updatedRoute = new List<BaseRouteElement>() { route.First() };
 
+            // Skal ligges i foreach for routes, så den resettes hver gang der kikkes på en ny route 
+            _previousEffectiveWidth = 0.0;
+            _previousSpecificFlow = 0.0;
+            _previousCalculatedFlow = 0.0;
+            _previousFirstPersonTime = 0.0;
+            _previousLastPersonTime = 0.0;
+
             foreach (var routeElement in route)
             {
                 // Corridor
-                if (routeElement.RouteType == RouteTypes.Corridor)
+                if (routeElement.RouteTypeId == RouteTypeHelper.Corridor)
                 {
                     // Cast routeElement to Corridor
                     var element = ((Corridor)routeElement);
@@ -38,7 +48,7 @@ namespace Evacuation.lib.Models
                     {
                         if (element.Density < 0.001)
                         {
-                            throw new Exception("The Density cannot be zero after the QuadraticEquationSolver, Calculator -> CalculateRoute");
+                            throw new Exception("The Density cannot be zero for the First RouteElement, Calculator -> CalculateRoute");
                         }
 
                         // Determine Specific Flow
@@ -89,8 +99,19 @@ namespace Evacuation.lib.Models
                     // Determine Travel Time
                     element.TravelTime = element.Distance / element.Speed;
 
+                    // Time for Passage
+                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // First Person Time
+                    element.FirstPersonTime = _previousFirstPersonTime + element.TravelTime;
+
+                    // Last Person Time
+                    element.LastPersonTime = (element.QueueBuildup <= 0) ?
+                        _previousLastPersonTime + element.TravelTime :
+                        _previousLastPersonTime + element.TimeForPassage + element.TravelTime;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;
@@ -101,7 +122,7 @@ namespace Evacuation.lib.Models
                 }
 
                 // Door
-                if (routeElement.RouteType == RouteTypes.Door)
+                if (routeElement.RouteTypeId == RouteTypeHelper.Door)
                 {
                     // Cast routeElement to Door
                     var element = ((Door)routeElement);
@@ -137,8 +158,19 @@ namespace Evacuation.lib.Models
                     // Determine Calculated Flow
                     element.CalculatedFlow = element.SpecificFlow * element.EffectiveWidth;
 
+                    // Time for Passage
+                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // First Person Time
+                    element.FirstPersonTime = _previousFirstPersonTime;
+
+                    // Last Person Time
+                    element.LastPersonTime = (element.QueueBuildup <= 0) ?
+                        _previousLastPersonTime :
+                        _previousLastPersonTime + element.TimeForPassage;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;
@@ -149,7 +181,7 @@ namespace Evacuation.lib.Models
                 }
 
                 // Stairway
-                if (routeElement.RouteType == RouteTypes.Stairway)
+                if (routeElement.RouteTypeId == RouteTypeHelper.Stairway)
                 {
                     // Cast routeElement to Stairway
                     var element = ((Stairway)routeElement);
@@ -213,8 +245,19 @@ namespace Evacuation.lib.Models
                     // Determine Travel Time
                     element.TravelTime = element.Distance / element.Speed;
 
+                    // Time for Passage
+                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // First Person Time
+                    element.FirstPersonTime = _previousFirstPersonTime + element.TravelTime;
+
+                    // Last Person Time
+                    element.LastPersonTime = (element.QueueBuildup <= 0) ?
+                        _previousLastPersonTime + element.TravelTime :
+                        _previousLastPersonTime + element.TimeForPassage + element.TravelTime;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;

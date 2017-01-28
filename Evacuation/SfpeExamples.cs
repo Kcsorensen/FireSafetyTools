@@ -18,14 +18,20 @@ namespace Evacuation
             var resultStairwayDensity = 1.471;
 
             var viewModel = new EvacuationViewModel();
+            viewModel.Initiate();
 
-            var routeName = "Evacaution from 9th floor";
-            var initialNumberOfPeople = 150;
-
-            viewModel.CreateRoute(routeName, initialNumberOfPeople);
-
-            var corridor = new Corridor()
+            var routeViewModel = new CreateRouteViewModel()
             {
+                Name = "Evacaution from 9th floor",
+                NumberOfPeople = 150
+            };
+
+            viewModel.CreateRoute(routeViewModel);
+
+            var corridorViewModel = new CreateRouteElementViewModel()
+            {
+                RouteId = viewModel.Routes.First().Key,
+                RouteTypeId = RouteTypeHelper.Corridor,
                 Name = "Corridor on 9th Floor",
                 NumberOfPeople = 150,
                 Width = 2.44,
@@ -33,36 +39,40 @@ namespace Evacuation
                 Density = 150 / (45.7 * 2.44)
             };
 
-            viewModel.AddRouteElementToRoute(routeName, corridor);
+            viewModel.AddRouteElementToRoute(corridorViewModel);
 
-            var door = new Door()
+            var doorViewModel = new CreateRouteElementViewModel()
             {
+                RouteId = viewModel.Routes.First().Key,
+                RouteTypeId = RouteTypeHelper.Door,
                 Name = "Door on 9th Floor",
                 NumberOfPeople = 150,
                 Width = 0.91
             };
 
-            viewModel.AddRouteElementToRoute(routeName, door);
+            viewModel.AddRouteElementToRoute(doorViewModel);
 
-            var stairway = new Stairway(StairwayTypes.Rise180xTread280)
+            var stairwayViewModel = new CreateRouteElementViewModel()
             {
+                RouteId = viewModel.Routes.First().Key,
+                RouteTypeId = RouteTypeHelper.Stairway,
                 Name = "Stairway on 9th Floor",
                 NumberOfPeople = 150,
                 Width = 1.12,
                 Distance = 11.6,
+                StairwayType = StairwayTypes.Rise180xTread280
             };
 
-            viewModel.AddRouteElementToRoute(routeName, stairway);
+            viewModel.AddRouteElementToRoute(stairwayViewModel);
 
             // Act
-
             var calculator = new Calculator();
 
-            var updatedRoute = calculator.CalculateRoute(viewModel.GetRoute(routeName));
+            var updatedRoute = calculator.CalculateRoute(viewModel.GetRoute(viewModel.Routes.First().Key));
 
-            var updatedCorridor = ((Corridor)updatedRoute.Single(x => x.RouteType == RouteTypes.Corridor));
-            var updatedDoor = ((Door)updatedRoute.Single(x => x.RouteType == RouteTypes.Door));
-            var updatedStairway = ((Stairway)updatedRoute.Single(x => x.RouteType == RouteTypes.Stairway));
+            var updatedCorridor = ((Corridor)updatedRoute.Single(x => x.RouteTypeId == RouteTypeHelper.Corridor));
+            var updatedDoor = ((Door)updatedRoute.Single(x => x.RouteTypeId == RouteTypeHelper.Door));
+            var updatedStairway = ((Stairway)updatedRoute.Single(x => x.RouteTypeId == RouteTypeHelper.Stairway));
 
             // Assert
 

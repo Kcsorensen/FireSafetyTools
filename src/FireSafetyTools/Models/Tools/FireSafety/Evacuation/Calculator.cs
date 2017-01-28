@@ -11,6 +11,8 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
         private double _previousEffectiveWidth;
         private double _previousSpecificFlow;
         private double _previousCalculatedFlow;
+        private double _previousFirstPersonTime;
+        private double _previousLastPersonTime;
 
         public List<BaseRouteElement> CalculateRoute(List<BaseRouteElement> route)
         {
@@ -21,13 +23,18 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
 
             // Create a placeholder for the updated routes and populate with the first item from input parameter, RouteStart
             var updatedRoute = new List<BaseRouteElement>() { route.First() };
-
-            var previousFirstPersonTime = 0.0;
+             
+            // Skal ligges i foreach for routes, så den resettes hver gang der kikkes på en ny route 
+            _previousEffectiveWidth = 0.0;
+            _previousSpecificFlow = 0.0;
+            _previousCalculatedFlow = 0.0;
+            _previousFirstPersonTime = 0.0;
+            _previousLastPersonTime = 0.0;
 
             foreach (var routeElement in route)
             {
                 // Corridor
-                if (routeElement.RouteType == RouteTypeHelper.Corridor)
+                if (routeElement.RouteTypeId == RouteTypeHelper.Corridor)
                 {
                     // Cast routeElement to Corridor
                     var element = ((Corridor)routeElement);
@@ -91,22 +98,32 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     // Determine Travel Time
                     element.TravelTime = element.Distance / element.Speed;
 
+                    // Time for Passage
+                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
 
-                    // First persons Time
-                    element.FirstPersonTime = (element.Distance != 0.00) ? previousFirstPersonTime + element.Distance/element.Speed : 0;
+                    // First Person Time
+                    element.FirstPersonTime = _previousFirstPersonTime + element.TravelTime;
+
+                    // Last Person Time
+                    element.LastPersonTime = (element.QueueBuildup <= 0) ? 
+                        _previousLastPersonTime +  element.TravelTime :
+                        _previousLastPersonTime + element.TimeForPassage + element.TravelTime;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;
                     _previousSpecificFlow = element.SpecificFlow;
                     _previousCalculatedFlow = element.CalculatedFlow;
+                    _previousFirstPersonTime = element.FirstPersonTime;
+                    _previousLastPersonTime = element.LastPersonTime;
 
                     updatedRoute.Add(element);
                 }
 
                 // Door
-                if (routeElement.RouteType == RouteTypeHelper.Door)
+                if (routeElement.RouteTypeId == RouteTypeHelper.Door)
                 {
                     // Cast routeElement to Door
                     var element = ((Door)routeElement);
@@ -142,19 +159,32 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     // Determine Calculated Flow
                     element.CalculatedFlow = element.SpecificFlow * element.EffectiveWidth;
 
+                    // Time for Passage
+                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // First Person Time
+                    element.FirstPersonTime = _previousFirstPersonTime;
+
+                    // Last Person Time
+                    element.LastPersonTime = (element.QueueBuildup <= 0) ?
+                        _previousLastPersonTime :
+                        _previousLastPersonTime + element.TimeForPassage;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;
                     _previousSpecificFlow = element.SpecificFlow;
                     _previousCalculatedFlow = element.CalculatedFlow;
+                    _previousFirstPersonTime = element.FirstPersonTime;
+                    _previousLastPersonTime = element.LastPersonTime;
 
                     updatedRoute.Add(element);
                 }
 
                 // Stairway
-                if (routeElement.RouteType == RouteTypeHelper.Stairway)
+                if (routeElement.RouteTypeId == RouteTypeHelper.Stairway)
                 {
                     // Cast routeElement to Stairway
                     var element = ((Stairway)routeElement);
@@ -218,13 +248,26 @@ namespace FireSafetyTools.Models.Tools.FireSafety.Evacuation
                     // Determine Travel Time
                     element.TravelTime = element.Distance / element.Speed;
 
+                    // Time for Passage
+                    element.TimeForPassage = element.NumberOfPeople / element.CalculatedFlow;
+
                     // Determine Queue Buildup
                     element.QueueBuildup = _previousCalculatedFlow - element.CalculatedFlow;
+
+                    // First Person Time
+                    element.FirstPersonTime = _previousFirstPersonTime + element.TravelTime;
+
+                    // Last Person Time
+                    element.LastPersonTime = (element.QueueBuildup <= 0) ?
+                        _previousLastPersonTime + element.TravelTime :
+                        _previousLastPersonTime + element.TimeForPassage + element.TravelTime;
 
                     // Update previous Specific Flow, Effective Width and Calculated Flow
                     _previousEffectiveWidth = element.EffectiveWidth;
                     _previousSpecificFlow = element.SpecificFlow;
                     _previousCalculatedFlow = element.CalculatedFlow;
+                    _previousFirstPersonTime = element.FirstPersonTime;
+                    _previousLastPersonTime = element.LastPersonTime;
 
                     updatedRoute.Add(element);
                 }

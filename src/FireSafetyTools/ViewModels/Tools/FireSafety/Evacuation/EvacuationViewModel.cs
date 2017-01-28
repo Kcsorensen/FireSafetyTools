@@ -9,21 +9,53 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
     {
         public Dictionary<int, List<BaseRouteElement>> Routes { get; set; }
 
-        public EvacuationViewModel()
+        public void Initiate() 
         {
             Routes = new Dictionary<int, List<BaseRouteElement>>();
 
-            StartupExample();
-        }
-
-        private void StartupExample()
-        {
             var routeViewModel = new CreateRouteViewModel()
             {
-                Name = "Evacuation"
+                Name = "Evacuation from 9th floor"
             };
 
             CreateRoute(routeViewModel);
+
+            var corridor = new CreateRouteElementViewModel()
+            {
+                RouteId = Routes.First().Key,
+                RouteTypeId = RouteTypeHelper.Corridor,
+                Name = "9th floor Corridor",
+                Width = 2.44,
+                Distance = (15.2 + 45.7) / 2,
+                NumberOfPeople = 150,
+                Density = 150 / (2.44 * 45.7)
+            };
+
+            AddRouteElementToRoute(corridor);
+
+            var door = new CreateRouteElementViewModel()
+            {
+                RouteId = Routes.First().Key,
+                RouteTypeId = RouteTypeHelper.Door,
+                Name = "9th floor Door",
+                Width = 0.91,
+                NumberOfPeople = 150,
+            };
+
+            AddRouteElementToRoute(door);
+
+            var stairway = new CreateRouteElementViewModel()
+            {
+                RouteId = Routes.First().Key,
+                RouteTypeId = RouteTypeHelper.Stairway,
+                Name = "9th floor Stairway",
+                Width = 1.12,
+                Distance = 11.6,
+                NumberOfPeople = 150,
+                StairwayType = StairwayTypes.Rise180xTread280
+            };
+
+            AddRouteElementToRoute(stairway);
         }
 
         public void CreateRoute(CreateRouteViewModel viewModel)
@@ -151,6 +183,20 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
             var route = Routes.Single(x => x.Key == routeId).Value;
 
             return route;
+        }
+
+        public void CalculateRoutes()
+        {
+            var calculator = new Calculator();
+
+            foreach (var route in Routes)
+            {
+                var updatedRouteElements = calculator.CalculateRoute(route.Value);
+
+                route.Value.Clear();
+
+                route.Value.AddRange(updatedRouteElements);
+            }
         }
 
         public void ClearRoutes()

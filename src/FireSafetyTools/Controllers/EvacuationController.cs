@@ -13,6 +13,7 @@ namespace FireSafetyTools.Controllers
             if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
             {
                 var evacuationViewModel = new EvacuationViewModel();
+                evacuationViewModel.Initiate();
 
                 HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
             }
@@ -36,28 +37,10 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
-            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
-
-            var countOfRouteElements = evacuationViewModel.Routes.Single(x => x.Key == routeId).Value.Count;
-
-            // Default TransitionType
-            var transitionTypeId = TransitionTypes.OneFlowInOneFlowOut;
-
-            if (countOfRouteElements == 1)
-            {
-                transitionTypeId = TransitionTypes.FirstRouteElement;
-            }
-
             var viewModel = new CreateRouteElementViewModel()
             {
                 RouteId = routeId,
                 RouteTypeId = routeTypeId,
-                TransitionType = transitionTypeId
             };
 
             return View(viewModel);
@@ -141,6 +124,10 @@ namespace FireSafetyTools.Controllers
             }
 
             var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            evacuationViewModel.CalculateRoutes();
+
+            HttpContext.Session.SetObjectAsJson(SessionNames.EvacuationData, evacuationViewModel);
 
             return View("EvacuationResult", evacuationViewModel);
         }
