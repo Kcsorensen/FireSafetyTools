@@ -22,7 +22,7 @@
     </ul>
 
     <ul class="listoftextboxes col-lg-8 col-md-8">
-        
+
         @if (Model.RouteTypeId != RouteTypeHelper.Door)
         {
             <li class="dropboxblock col-lg-6 col-md-6">
@@ -36,20 +36,12 @@
 
         <li class="dropboxblock col-lg-6 col-md-6">
             <div class="form-group">
-                @Html.LabelFor(d => d.NumberOfPeople)
-                @Html.TextBoxFor(d => d.NumberOfPeople, new {@class = "form-control"})
-                @Html.ValidationMessageFor(d => d.NumberOfPeople)
-            </div>
-        </li>
-
-        <li class="dropboxblock col-lg-6 col-md-6">
-            <div class="form-group">
                 @Html.LabelFor(d => d.Width)
-                @Html.TextBoxFor(d => d.Width, new {@class = "form-control"})
+                @Html.TextBoxFor(d => d.Width, new { @class = "form-control" })
                 @Html.ValidationMessageFor(d => d.Width)
             </div>
         </li>
-        
+
         @if (Model.TransitionType == TransitionTypes.FirstRouteElement)
         {
             <li class="dropboxblock col-lg-6 col-md-6">
@@ -61,9 +53,32 @@
             </li>
         }
 
+        @if (Model.RouteTypeId == RouteTypeHelper.Stairway)
+        {
+            <li class="dropboxblock col-lg-6 col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.StairwayType)
+                    @Html.DropDownListFor(d => d.StairwayType, new SelectList(StairwayTypes.ListOfStairTypes, "Id", "Name"), "", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.StairwayType)
+                </div>
+            </li>
+        }
+
     </ul>
 
+
+
     <div id="clearline"></div>
+
+    if (Model.RouteTypeId == RouteTypeHelper.Corridor ||
+        Model.RouteTypeId == RouteTypeHelper.Stairway)
+    {
+        <div class="form-group">
+            @Html.CheckBoxFor(d => d.HasHandrails)
+            @Html.Label("Does the " + @RouteTypeHelper.GetRouteTypeName(Model.RouteTypeId) + " have handrails")
+            @Html.ValidationMessageFor(d => d.StairwayType)
+        </div>
+    }
 
     @Html.TextBoxFor(d => d.RouteId, Model.RouteId.ToString(), new { @class = "hidden" })
     @Html.TextBoxFor(d => d.RouteTypeId, Model.RouteTypeId.ToString(), new { @class = "hidden" })

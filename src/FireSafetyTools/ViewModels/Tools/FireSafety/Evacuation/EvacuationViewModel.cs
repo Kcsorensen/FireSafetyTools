@@ -29,7 +29,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                 Name = "9th floor Corridor",
                 Width = 2.44,
                 Distance = (15.2 + 45.7) / 2,
-                NumberOfPeople = 150,
                 Density = 150 / (2.44 * 45.7)
             };
 
@@ -40,8 +39,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                 RouteId = Routes.First().Key,
                 RouteTypeId = RouteTypeHelper.Door,
                 Name = "9th floor Door",
-                Width = 0.91,
-                NumberOfPeople = 150,
+                Width = 0.91
             };
 
             AddRouteElementToRoute(door);
@@ -53,7 +51,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                 Name = "9th floor Stairway",
                 Width = 1.12,
                 Distance = 11.6,
-                NumberOfPeople = 150,
                 StairwayType = StairwayTypes.Rise180xTread280
             };
 

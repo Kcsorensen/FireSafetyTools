@@ -8,8 +8,12 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
         public string Name { get; set; }
         public int RouteId { get; set; }
         public int RouteTypeId { get; set; }
-        public bool HasHandrails { get; set; }
         public int TransitionType { get; set; }
+
+        [Display(Name = "Handrail")]
+        public bool HasHandrails { get; set; }
+
+        [Display(Name = "Type of Stairway")]
         public int StairwayType { get; set; }
 
         [Display(Name = "Width [m]")]
@@ -17,9 +21,6 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
 
         [Display(Name = "Density [people/m²]")]
         public double Density { get; set; }
-
-        [Display(Name = "Number of People")]
-        public double NumberOfPeople { get; set; }
 
         [Display(Name = "Distance [m]")]
         public double Distance { get; set; }
