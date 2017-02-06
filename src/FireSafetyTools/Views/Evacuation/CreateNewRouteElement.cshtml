@@ -23,11 +23,23 @@
 
     <ul class="listoftextboxes col-lg-8 col-md-8">
 
-        @if (Model.RouteTypeId != RouteTypeHelper.Door)
+        @if (Model.RouteTypeId == RouteTypeHelper.Corridor || Model.RouteTypeId == RouteTypeHelper.Stairway ||
+                Model.RouteTypeId == RouteTypeHelper.WideConcourse)
         {
             <li class="dropboxblock col-lg-6 col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(d => d.Distance)
+                    @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(d => d.Distance)
+                </div>
+            </li>
+        }
+
+        @if (Model.RouteTypeId == RouteTypeHelper.Room)
+        {
+            <li class="dropboxblock col-lg-6 col-md-6">
+                <div class="form-group">
+                    @Html.Label("Average Distance [m]")
                     @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
                     @Html.ValidationMessageFor(d => d.Distance)
                 </div>
@@ -79,6 +91,15 @@
             @Html.ValidationMessageFor(d => d.StairwayType)
         </div>
     }
+
+    <li class="dropboxblock col-lg-12 col-md-12">
+        <div class="form-group">
+            @Html.LabelFor(d => d.StairwayType)
+            @Html.DropDownListFor(d => d.StairwayType, new SelectList(StairwayTypes.ListOfStairTypes, "Id", "Name"), "", new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.StairwayType)
+        </div>
+    </li>
+
 
     @Html.TextBoxFor(d => d.RouteId, Model.RouteId.ToString(), new { @class = "hidden" })
     @Html.TextBoxFor(d => d.RouteTypeId, Model.RouteTypeId.ToString(), new { @class = "hidden" })
