@@ -11,99 +11,80 @@
 
 @using (Html.BeginForm("SaveRouteElement", "Evacuation"))
 {
-    <ul class="listoftextboxes col-lg-8 col-md-8">
-        <li class="dropboxblock col-lg-6 col-md-6">
-            <div class="form-group" style="margin-top: 30px; margin-bottom: 30px;">
-                @Html.LabelFor(d => d.Name)
-                @Html.TextBoxFor(d => d.Name, new { @class = "form-control" })
-                @Html.ValidationMessageFor(d => d.Name)
-            </div>
-        </li>
-    </ul>
 
-    <ul class="listoftextboxes col-lg-8 col-md-8">
+    <div class="form-group" style="margin-top: 30px; margin-bottom: 30px;">
+        @Html.LabelFor(d => d.Name)
+        @Html.TextBoxFor(d => d.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(d => d.Name)
+    </div>
 
-        @if (Model.RouteTypeId == RouteTypeHelper.Corridor || Model.RouteTypeId == RouteTypeHelper.Stairway ||
-                Model.RouteTypeId == RouteTypeHelper.WideConcourse)
-        {
-            <li class="dropboxblock col-lg-6 col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.Distance)
-                    @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.Distance)
-                </div>
-            </li>
-        }
-
-        @if (Model.RouteTypeId == RouteTypeHelper.Room)
-        {
-            <li class="dropboxblock col-lg-6 col-md-6">
-                <div class="form-group">
-                    @Html.Label("Average Distance [m]")
-                    @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.Distance)
-                </div>
-            </li>
-        }
-
-        <li class="dropboxblock col-lg-6 col-md-6">
-            <div class="form-group">
-                @Html.LabelFor(d => d.Width)
-                @Html.TextBoxFor(d => d.Width, new { @class = "form-control" })
-                @Html.ValidationMessageFor(d => d.Width)
-            </div>
-        </li>
-
-        @if (Model.TransitionType == TransitionTypes.FirstRouteElement)
-        {
-            <li class="dropboxblock col-lg-6 col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.Density)
-                    @Html.TextBoxFor(d => d.Density, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.Density)
-                </div>
-            </li>
-        }
-
-        @if (Model.RouteTypeId == RouteTypeHelper.Stairway)
-        {
-            <li class="dropboxblock col-lg-6 col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.StairwayType)
-                    @Html.DropDownListFor(d => d.StairwayType, new SelectList(StairwayTypes.ListOfStairTypes, "Id", "Name"), "", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(d => d.StairwayType)
-                </div>
-            </li>
-        }
-
-    </ul>
-
-
-
-    <div id="clearline"></div>
-
-    if (Model.RouteTypeId == RouteTypeHelper.Corridor ||
-        Model.RouteTypeId == RouteTypeHelper.Stairway)
+    if (Model.RouteTypeId == RouteTypeHelper.Corridor || Model.RouteTypeId == RouteTypeHelper.Stairway ||
+                            Model.RouteTypeId == RouteTypeHelper.WideConcourse)
     {
         <div class="form-group">
-            @Html.CheckBoxFor(d => d.HasHandrails)
-            @Html.Label("Does the " + @RouteTypeHelper.GetRouteTypeName(Model.RouteTypeId) + " have handrails")
-            @Html.ValidationMessageFor(d => d.StairwayType)
+            @Html.LabelFor(d => d.Distance)
+            @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Distance)
         </div>
     }
 
-    <li class="dropboxblock col-lg-12 col-md-12">
+    if (Model.RouteTypeId == RouteTypeHelper.Room)
+    {
+        <div class="form-group">
+            @Html.Label("Average Distance [m]")
+            @Html.TextBoxFor(d => d.Distance, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Distance)
+        </div>
+    }
+
+    if (Model.RouteTypeId != RouteTypeHelper.Room)
+    {
+        <div class="form-group">
+            @Html.LabelFor(d => d.Width)
+            @Html.TextBoxFor(d => d.Width, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Width)
+        </div>
+    }
+
+
+    if (Model.TransitionType == TransitionTypes.FirstRouteElement)
+    {
+        <div class="form-group">
+            @Html.LabelFor(d => d.Density)
+            @Html.TextBoxFor(d => d.Density, new { @class = "form-control" })
+            @Html.ValidationMessageFor(d => d.Density)
+        </div>
+    }
+
+    if (Model.RouteTypeId == RouteTypeHelper.Stairway)
+    {
         <div class="form-group">
             @Html.LabelFor(d => d.StairwayType)
             @Html.DropDownListFor(d => d.StairwayType, new SelectList(StairwayTypes.ListOfStairTypes, "Id", "Name"), "", new { @class = "form-control" })
             @Html.ValidationMessageFor(d => d.StairwayType)
         </div>
-    </li>
+    }
+
+    if (Model.RouteTypeId == RouteTypeHelper.Corridor || Model.RouteTypeId == RouteTypeHelper.Stairway)
+    {
+        <div class="form-group" style="margin-top: 30px">
+            @Html.CheckBoxFor(d => d.HasHandrails)
+            @Html.Label("Does the " + @RouteTypeHelper.GetRouteTypeName(Model.RouteTypeId).ToLower() + " have handrails")
+            @Html.ValidationMessageFor(d => d.StairwayType)
+        </div>
+
+        <div id="divStairway" class="form-group">
+            @Html.LabelFor(d => d.DistanceFromWallToHandrail)
+            @Html.TextBoxFor(d => d.DistanceFromWallToHandrail, new { @class = "form-control", disabled=true })
+            @Html.ValidationMessageFor(d => d.DistanceFromWallToHandrail)
+        </div>
+    }
 
 
     @Html.TextBoxFor(d => d.RouteId, Model.RouteId.ToString(), new { @class = "hidden" })
     @Html.TextBoxFor(d => d.RouteTypeId, Model.RouteTypeId.ToString(), new { @class = "hidden" })
-    <button type="submit" class="btn btn-danger">Save Route</button>
+    @Html.TextBoxFor(d => d.TransitionType, Model.TransitionType.ToString(), new { @class = "hidden" })
+    <button type="submit" class="btn btn-danger" style="margin-top: 20px">Save Route</button>
 }
 
 <style>
@@ -128,4 +109,27 @@
     }
 </style>
 
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $("#HasHandrails").change(function () {
+                var isChecked = $(this).is(":checked");
+
+                if (isChecked === true) {
+                    $("#DistanceFromWallToHandrail").prop("disabled", false);
+                }
+                else {
+                    $("#DistanceFromWallToHandrail").prop("disabled", true);
+                }
+
+
+            });
+
+
+        })
+
+    </script>
+}
 

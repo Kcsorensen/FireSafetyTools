@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FireSafetyTools.ViewModels.Tools.FireSafety.DesignFire;
@@ -19,14 +20,14 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
             using (ExcelPackage package = new ExcelPackage())
             {
-                // add new worksheets to the empty workbook
+                // Add new worksheets to the empty workbook
                 ExcelWorksheet worksheetPhases = package.Workbook.Worksheets.Add("Phases");
                 ExcelWorksheet worksheetGraph = package.Workbook.Worksheets.Add("Graph data");
                 ExcelWorksheet worksheetPyrosim = package.Workbook.Worksheets.Add("Pyrosim data");
 
                 #region worksheetPhases
 
-                //First add the headers
+                // First add the headers
                 worksheetPhases.Cells[1, 1].Value = "#";
                 worksheetPhases.Cells[1, 2].Value = "Phase";
                 worksheetPhases.Cells[1, 3].Value = "Duration [s]";
@@ -43,7 +44,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     cells.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                 }
 
-                //Add values to worksheetPhases
+                // Add values to worksheetPhases
                 int phaseCounter = 1;
 
                 foreach (var phase in designFireViewModel.Phases)
@@ -66,7 +67,7 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
 
                 #region worksheetGraph
 
-                //First add the headers
+                // First add the headers
                 worksheetGraph.Cells[1, 1].Value = "Time";
                 worksheetGraph.Cells[1, 2].Value = "Effect";
 
@@ -79,30 +80,27 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     cells.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                 }
 
-                //Add values to worksheetGraph
+                // Add values to worksheetGraph
                 int graphCounter = 1;
 
-                foreach (var phase in designFireViewModel.Phases)
+                foreach (var dataPoint in designFireViewModel.ChartDataPoints)
                 {
-                    if (phase.GetDataPoints() == null)
+                    if (dataPoint == null)
                     {
-                        throw new NullReferenceException("The DataPoints in the Phase cannot be null -> worksheetGraph");
+                        throw new NullReferenceException("The DataPoints in the ChartDataPoints cannot be null -> worksheetGraph");
                     }
 
-                    foreach (var dataPoint in phase.GetDataPoints())
-                    {
-                        worksheetGraph.Cells[1 + graphCounter, 1].Value = dataPoint.Time;
-                        worksheetGraph.Cells[1 + graphCounter, 2].Value = dataPoint.Effect;
+                    worksheetGraph.Cells[1 + graphCounter, 1].Value = dataPoint.Time;
+                    worksheetGraph.Cells[1 + graphCounter, 2].Value = dataPoint.Effect;
 
-                        graphCounter += 1;
-                    }
+                    graphCounter += 1;
                 }
 
                 #endregion
 
                 #region worksheetPyrosim
 
-                //First add the headers
+                // First add the headers
                 worksheetPyrosim.Cells[1, 1].Value = "Time";
                 worksheetPyrosim.Cells[1, 2].Value = "Fraction";
 
@@ -115,28 +113,25 @@ namespace FireSafetyTools.Models.Tools.FireSafety.DesignFire
                     cells.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                 }
 
-                //Add values to worksheetPhases
+                // Add values to worksheetPhases
                 int pyrosimCounter = 1;
 
                 var maxEffect = designFireViewModel.ChartDataPoints.Max(x => x.Effect);
 
-                foreach (var phase in designFireViewModel.Phases)
+                foreach (var dataPoint in designFireViewModel.ChartDataPoints)
                 {
-                    if (phase.GetDataPoints() == null)
+                    if (dataPoint == null)
                     {
-                        throw new NullReferenceException("The DataPoints in the Phase cannot be null -> worksheetPyrosim");
+                        throw new NullReferenceException("The DataPoints in the ChartDataPoints cannot be null -> worksheetPyrosim");
                     }
 
-                    foreach (var dataPoint in phase.GetDataPoints())
-                    {
-                        var time = Math.Round(dataPoint.Time, 2);
-                        var fraction = Math.Round((dataPoint.Effect / maxEffect), 2);
+                    var time = Math.Round(dataPoint.Time, 2).ToString(new CultureInfo("en-US"));
+                    var fraction = Math.Round((dataPoint.Effect / maxEffect), 2).ToString(new CultureInfo("en-US"));
 
-                        worksheetPyrosim.Cells[1 + pyrosimCounter, 1].Value = time;
-                        worksheetPyrosim.Cells[1 + pyrosimCounter, 2].Value = fraction;
+                    worksheetPyrosim.Cells[1 + pyrosimCounter, 1].Value = time;
+                    worksheetPyrosim.Cells[1 + pyrosimCounter, 2].Value = fraction;
 
-                        pyrosimCounter += 1;
-                    }
+                    pyrosimCounter += 1;
                 }
 
                 #endregion

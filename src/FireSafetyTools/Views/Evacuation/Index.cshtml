@@ -37,6 +37,15 @@
 									<ul class="dropdown-menu">
 										@foreach (var routeType in RouteTypeHelper.ListOfRouteTypes)
 										{
+										    if (route.Value.Count > 1)
+										    {
+										        if (routeType.Id == RouteTypeHelper.Room)
+										        {
+                                                    // Skip the current loop
+										            continue;
+										        }
+										    }
+
 											<li>@Html.ActionLink(routeType.Name, "CreateNewRouteElement", "Evacuation", new { routeTypeId = routeType.Id, routeId = route.Key }, null)</li>
 										}
 									</ul>
@@ -51,10 +60,10 @@
 							<thead>
 								<tr>
 									<th style="text-align: center; width: 50px ">#</th>
-									<th style="text-align: left">Name</th>
+								    <th style="text-align: left">Name</th>
+                                    <th class="hidden-sm hidden-xs" style="text-align: center">Distance</th>
 									<th class="hidden-sm hidden-xs" style="text-align: center">Width</th>
 									<th class="hidden-sm hidden-xs" style="text-align: center">Density</th>
-									<th class="hidden-sm hidden-xs" style="text-align: center">Transition</th>
                                     <th style="text-align: center"><em class="fa fa-cog"></em></th>
 								</tr>
 							</thead>
@@ -67,9 +76,18 @@
                                         <tr>
                                             <td id="phaseid" style="text-align: center">@routeElement.RouteElementId</td>
                                             <td class="hidden-xs" style="text-align: left">@routeElement.Name</td>
-                                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(routeElement.Width, 2) m</td>
+                                            <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(routeElement.Distance, 2) m</td>
+
+                                            @if (routeElement.RouteTypeId != RouteTypeHelper.Room)
+                                            {
+                                                <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(routeElement.Width, 2) m</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="hidden-sm hidden-xs" style="text-align: center">-</td>
+                                            }
+                                            
                                             <td class="hidden-sm hidden-xs" style="text-align: center">@Math.Round(routeElement.Density, 2) p/m² </td>
-                                            <td class="hidden-sm hidden-xs" style="text-align: center">@routeElement.TransitionType</td>
                                             <td style="text-align: center">
                                                 <a href="@Url.Action("EditRouteElement", "Evacuation", new {id = routeElement.RouteElementId})" class="btn btn-sm btn-default" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-pencil"></span></a>
                                                 <a class="btn btn-sm btn-danger js-delete" style="position: relative; z-index: 1"><span class="glyphicon glyphicon-trash"></span></a>

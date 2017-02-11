@@ -93,12 +93,18 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
             // NullExceptionCheck is implemented in Single()
             var route = Routes.Single(x => x.Key == viewModel.RouteId).Value;
 
-            // Default value
-            int transitionType = TransitionTypes.OneFlowInOneFlowOut;
-
-            if (route.Count == 1)
+            if (viewModel.RouteTypeId == RouteTypeHelper.Room)
             {
-                transitionType = TransitionTypes.FirstRouteElement;
+                var routeElement = new Room()
+                {
+                    Name = viewModel.Name,
+                    Density = viewModel.Density,
+                    Distance = viewModel.Distance,
+                    TransitionType = viewModel.TransitionType,
+                    RouteElementId = route.Count
+                };
+
+                route.Add(routeElement);
             }
 
             if (viewModel.RouteTypeId == RouteTypeHelper.Corridor)
@@ -109,7 +115,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Width = viewModel.Width,
                     Density = viewModel.Density,
                     Distance = viewModel.Distance,
-                    TransitionType = transitionType,
+                    TransitionType = viewModel.TransitionType,
                     RouteElementId = route.Count
                 };
 
@@ -123,7 +129,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Name = viewModel.Name,
                     Width = viewModel.Width,
                     Density = viewModel.Density,
-                    TransitionType = transitionType,
+                    TransitionType = viewModel.TransitionType,
                     RouteElementId = route.Count
                 };
 
@@ -138,7 +144,7 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Width = viewModel.Width,
                     Density = viewModel.Density,
                     Distance = viewModel.Distance,
-                    TransitionType = transitionType,
+                    TransitionType = viewModel.TransitionType,
                     RouteElementId = route.Count
                 };
 
@@ -153,19 +159,12 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
                     Width = viewModel.Width,
                     Density = viewModel.Density,
                     Distance = viewModel.Distance,
-                    TransitionType = transitionType,
+                    TransitionType = viewModel.TransitionType,
                     RouteElementId = route.Count
                 };
 
                 route.Add(routeElement);
             }
-
-            //if (route.Any(x => x.Guid == routeElement.Guid))
-            //{
-            //    throw new Exception("Cannot add a RouteElement in a route to the same route, EvacuationViewModel -> AddRouteElementToRoute");
-            //}
-
-            //route.Add(routeElement);
         }
 
         public List<BaseRouteElement> GetRoute(int routeId)

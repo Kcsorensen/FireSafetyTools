@@ -37,10 +37,28 @@ namespace FireSafetyTools.Controllers
                 return NotFound();
             }
 
+            if (HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var evacuationViewModel = HttpContext.Session.GetObjectFromJson<EvacuationViewModel>(SessionNames.EvacuationData);
+
+            var route = evacuationViewModel.GetRoute(routeId);
+
+            // Default transitionType
+            int transitionType = TransitionTypes.OneFlowInOneFlowOut;
+
+            if (route.Count == 1)
+            {
+                transitionType = TransitionTypes.FirstRouteElement;
+            }
+
             var viewModel = new CreateRouteElementViewModel()
             {
                 RouteId = routeId,
                 RouteTypeId = routeTypeId,
+                TransitionType = transitionType
             };
 
             return View(viewModel);

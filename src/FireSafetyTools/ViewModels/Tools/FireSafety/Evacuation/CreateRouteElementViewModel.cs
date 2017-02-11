@@ -22,7 +22,10 @@ namespace FireSafetyTools.ViewModels.Tools.FireSafety.Evacuation
         [Display(Name = "Density [people/m²]")]
         public double Density { get; set; }
 
-        [Display(Name = "Distance [m]")]
+        [Display(Name = "Travel distance [m]")]
         public double Distance { get; set; }
+
+        [Display(Name = "Distance from wall to handrail [m]")]
+        public double DistanceFromWallToHandrail { get; set; }
     }
 }
